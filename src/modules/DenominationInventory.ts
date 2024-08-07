@@ -28,12 +28,13 @@ export class DenominationInventory {
     this.denomination = denomination;
     this.counters = {
       unit: new PerUnitCounter(counters?.unit.count),
-      weight: denomination.unitWeight
-        ? new PerWeightCounter(denomination.unitWeight, counters?.weight?.count)
-        : undefined,
       roll: denomination.rollCapacity
         ? new PerRollCounter(denomination.rollCapacity, counters?.roll?.count)
         : undefined,
+      weight: denomination.unitWeight
+        ? new PerWeightCounter(denomination.unitWeight, counters?.weight?.count)
+        : undefined,
+
     };
   }
 
