@@ -93,7 +93,7 @@ function App() {
 
   return (
     <Container>
-      <Top>
+      {/* <Top>
         {activeCounter ? (
           <NumberInput
             value={
@@ -113,9 +113,9 @@ function App() {
           <>
             <TotalDisplay total={CashFloatTotalValue} />
           </>
-        )}{" "}
-      </Top>
-      <span>
+        )}
+      </Top> */}
+      {/* <span>
         <button onClick={resetCashFloat}>Reset</button>
         <button onClick={() => setActiveCounter(null)}>total</button>
       </span>
@@ -162,6 +162,7 @@ function App() {
           </Row>
         ))}
       </Form>
+      <TotalDisplay total={CashFloatTotalValue} onReset={resetCashFloat} />
     </Container>
   );
 }
