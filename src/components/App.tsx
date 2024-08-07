@@ -7,7 +7,6 @@ import { useCashFloat } from "../state/cashFloat.state.ts";
 import { NumberInput } from "./CashInput";
 import { TotalDisplay } from "./TotalDisplay";
 import { Radio } from "./Radio";
-import { Display } from "phaser";
 
 const Container = styled.div`
   height: 100%;
@@ -53,21 +52,21 @@ const Row = styled.div`
   padding: var(--spacing-m);
   gap: var(--spacing-s);
 `;
-const Header = styled.div`
-  z-index: 1;
-  position: sticky;
-  top: 0;
-  color: white;
-  background-color: var(--color-dark);
-  display: flex;
-  height: fit-content;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid var(--color-light);
-  padding: var(--spacing-m);
-  gap: var(--spacing-s);
-  font-size: var(--font-size-l);
-`;
+// const Header = styled.div`
+//   z-index: 1;
+//   position: sticky;
+//   top: 0;
+//   color: white;
+//   background-color: var(--color-dark);
+//   display: flex;
+//   height: fit-content;
+//   justify-content: space-between;
+//   align-items: center;
+//   border-bottom: 2px solid var(--color-light);
+//   padding: var(--spacing-m);
+//   gap: var(--spacing-s);
+//   font-size: var(--font-size-l);
+// `;
 
 const RowLabel = styled.span`
   width: 100%;
@@ -136,31 +135,29 @@ function App() {
               </div>
             </RowLabel>
             <RadioContainer>
-              {Object.entries(inventory.counters).map(
-                ([key, counter], counterIndex) => {
-                  const typedKey = key as keyof typeof inventory.counters;
-                  return (
-                    counter && (
-                      <Radio
-                        key={inventoryIndex + key}
-                        id={inventoryIndex + key}
-                        label={counter?.count + " " + counter?.unit}
-                        value={counter?.count}
-                        checked={
-                          activeCounter?.inventoryIndex === inventoryIndex &&
-                          activeCounter.counterKey === typedKey
-                        }
-                        onChange={() =>
-                          setActiveCounter({
-                            inventoryIndex: inventoryIndex,
-                            counterKey: typedKey,
-                          })
-                        }
-                      />
-                    )
-                  );
-                }
-              )}
+              {Object.entries(inventory.counters).map(([key, counter]) => {
+                const typedKey = key as keyof typeof inventory.counters;
+                return (
+                  counter && (
+                    <Radio
+                      key={inventoryIndex + key}
+                      id={inventoryIndex + key}
+                      label={counter?.count + " " + counter?.unit}
+                      value={counter?.count}
+                      checked={
+                        activeCounter?.inventoryIndex === inventoryIndex &&
+                        activeCounter.counterKey === typedKey
+                      }
+                      onChange={() =>
+                        setActiveCounter({
+                          inventoryIndex: inventoryIndex,
+                          counterKey: typedKey,
+                        })
+                      }
+                    />
+                  )
+                );
+              })}
             </RadioContainer>
           </Row>
         ))}
