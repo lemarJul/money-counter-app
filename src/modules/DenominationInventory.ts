@@ -38,8 +38,10 @@ export class DenominationInventory {
   }
 
   public get label(): string {
-    return centToEuro(this.denomination.value).toString();
+    const euroVal = centToEuro(this.denomination.value)
+    return `${euroVal >= 1 ? euroVal : euroVal.toFixed(2)}€`
   }
+
 
   public get totalUnits(): number {
     return Object.values(this.counters)
@@ -52,5 +54,5 @@ export class DenominationInventory {
 }
 
 function centToEuro(value: number): number {
-  return +(value / 100).toFixed(2);
+  return +(value / 100);
 }
