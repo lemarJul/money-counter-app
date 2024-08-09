@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 import "./App.css";
 // State
@@ -69,52 +68,12 @@ const Header = styled.div`
   }
 `;
 
-// const RadioContainer = styled.div`
-//   display: flex;
-//   // flex-direction: column;
-//   gap: var(--spacing-s);
-//   justify-content: center;
-//   width: 100%;
-//   color: white;
-// `;
-
 function App() {
   const { cashFloat, CashFloatTotalValue, setCounter, resetCashFloat } =
     useCashFloat();
 
-  const [activeCounter, setActiveCounter] = useState<{
-    inventoryIndex: number;
-    counterKey: keyof (typeof cashFloat)[0]["counters"];
-  } | null>(null);
-
   return (
     <Container>
-      {/* <Top>
-        {activeCounter ? (
-          <NumberInput
-            value={
-              cashFloat[activeCounter.inventoryIndex].counters[
-                activeCounter.counterKey
-              ]!.count ?? 0
-            }
-            onChange={(val) =>
-              setCounter(
-                activeCounter.inventoryIndex,
-                activeCounter.counterKey,
-                val
-              )
-            }
-          />
-        ) : (
-          <>
-            <TotalDisplay total={CashFloatTotalValue} />
-          </>
-        )}
-      </Top> */}
-      {/* <span>
-        <button onClick={resetCashFloat}>Reset</button>
-        <button onClick={() => setActiveCounter(null)}>total</button>
-      </span> */}
       <Form action="">
         <Header>
           <RowLabel>€</RowLabel>
@@ -122,6 +81,7 @@ function App() {
           <span>rolls</span>
           <span>grams</span>
         </Header>
+
         {cashFloat.map((inventory, inventoryIndex) => (
           <Row key={inventoryIndex}>
             <RowLabel>
@@ -131,38 +91,12 @@ function App() {
               </span>
             </RowLabel>
 
-            {/* {Object.entries(inventory.counters).map(([key, counter]) => {
-              const typedKey = key as keyof typeof inventory.counters;
-              return (
-                counter && (
-                  <Radio
-                    key={inventoryIndex + key}
-                    id={inventoryIndex + key}
-                    label={counter?.count.toString()}
-                    // label={counter?.count + " " + counter?.unit}
-                    value={counter?.count}
-                    checked={
-                      activeCounter?.inventoryIndex === inventoryIndex &&
-                      activeCounter.counterKey === typedKey
-                    }
-                    onChange={() =>
-                      setActiveCounter({
-                        inventoryIndex: inventoryIndex,
-                        counterKey: typedKey,
-                      })
-                    }
-                  />
-                )
-              );
-            })} */}
-
             {Object.entries(inventory.counters).map(([key, counter]) => {
               const typedKey = key as keyof typeof inventory.counters;
               return (
                 counter && (
                   <NumberInput
                     key={inventoryIndex + key}
-                    // label={counter?.count + " " + counter?.unit}
                     value={counter?.count}
                     onChange={(val: number) =>
                       setCounter(inventoryIndex, typedKey, val)
