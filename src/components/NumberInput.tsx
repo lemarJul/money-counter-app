@@ -31,7 +31,7 @@ export const NumberInput = ({
   return (
     <Number
       type="number"
-      value={value ?? ""}
+      value={value || ""}
       onChange={(e) => onChange(+e.target.value > 0 ? +e.target.value : 0)}
       placeholder="0"
     ></Number>
