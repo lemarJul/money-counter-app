@@ -43,12 +43,12 @@ export const TotalDisplay = ({
   total,
   onReset,
 }: {
-  total: string | number;
+  total: number;
   onReset: () => void;
 }) => {
   return (
     <Container>
-      <Display>{total} €</Display>
+      <Total>{total.toFixed(2)} €</Total>
       <ResetButton onClick={onReset}>
         <TrashIcon src={TrashSvg} alt="Reset" />
       </ResetButton>
