@@ -22,8 +22,9 @@ const Form = styled.form`
   position: relative;
   height: 100%;
   width: 100%;
-  overflow: scroll;
-  border: 2px solid var(--color-dark);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  border: var(--border-width) solid var(--color-black);
   border-radius: var(--border-radius);
 `;
 
@@ -34,14 +35,17 @@ const InventoryHeaders = styled.div`
   color: white;
   background-color: var(--color-black);
   display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 100px;
-  justify-content: space-between;
+  height: fit-content;
   align-items: center;
-  border-bottom: 1px solid var(--color-dark);
+
   padding: var(--spacing-m);
-  gap: var(--spacing-m);
+  gap: var(--spacing-s);
+  font-size: var(--font-size-l);
+
+  & > span {
+    flex: 1;
+    min-width: 80px;
+  }
 `;
 
 const RowLabel = styled.span`
@@ -50,26 +54,6 @@ const RowLabel = styled.span`
   text-align: left;
   font-size: var(--font-size-xl);
   min-width: 80px;
-`;
-
-const Header = styled.div`
-  z-index: 1;
-  position: sticky;
-  top: 0;
-  color: white;
-  background-color: var(--color-dark);
-  display: flex;
-  height: fit-content;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: var(--spacing-m);
-  gap: var(--spacing-s);
-  font-size: var(--font-size-l);
-
-  & > span {
-    min-width: 80px;
-  }
 `;
 
 function App() {
@@ -92,7 +76,7 @@ function App() {
             inventory={inventory}
             inventoryIndex={inventoryIndex}
             setCounter={setCounter}
-                  />
+          />
         ))}
       </Form>
       <TotalDisplay total={CashFloatTotalValue} onReset={resetCashFloat} />
