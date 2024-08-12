@@ -1,42 +1,46 @@
 import styled from "styled-components";
 import TrashSvg from "../assets/trash-solid.svg";
 
-const TrashIcon = styled.img`
-  width: 100%;
-  height: 100%;
-  padding: var(--spacing-xs);
-  object-fit: contain;
-`;
-
 const Container = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  max-height: 10%;
   font-size: 5rem;
-
+  gap: var(--spacing-m);
   border-radius: var(--border-radius);
-  border: 2px solid var(--color-dark);
-  overflow: hidden;
 `;
-
-const ResetButton = styled.button`
-  font-size: var(--font-size-m);
-  width: 20%;
-  background-color: var(--color-disabled);
-  height: 100%;
-  border-radius: 0;
-  border: none;
-  color: var(--color-dark);
-`;
-
-const Display = styled.span`
-  display: inline-block;
-  width: 100%;
+const Total = styled.div`
+  background-color: var(--color-white);
+  flex: 1;
   text-align: center;
   font-size: var(--font-size-xxl);
   padding: var(--spacing-l);
+  border-radius: var(--border-radius);
+  border: var(--border-width) solid var(--border-color);
+`;
+const ResetButton = styled.button`
+  aspect-ratio: 1;
+  height: 100%;
+  padding: var(--spacing-l);
+  border: var(--border-width) solid var(--border-color);
+  font-size: var(--font-size-s);
+  border-radius: var(--border-radius);
+  &:hover {
+    border-color: var(--color-primary-faded);
+    background-color: var(--color-primary-faded);
+  }
+  &:active {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+  }
+  &:focus,
+  &:focus-visible {
+    outline: none;
+    border-color: none;
+  }
 `;
 
 export const TotalDisplay = ({
@@ -50,7 +54,7 @@ export const TotalDisplay = ({
     <Container>
       <Total>{total.toFixed(2)} €</Total>
       <ResetButton onClick={onReset}>
-        <TrashIcon src={TrashSvg} alt="Reset" />
+        <img src={TrashSvg} alt="Reset" />
       </ResetButton>
     </Container>
   );
