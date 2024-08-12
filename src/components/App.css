@@ -1,3 +1,28 @@
+:root {
+  font-family: Roboto, system-ui, -apple-system, "Open Sans", "Helvetica Neue",
+    sans-serif;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+}
+
+button {
+  border-radius: var(--border-radius);
+}
+
 #root {
   width: 100vw;
   height: 100dvh;
@@ -22,12 +47,22 @@
   --font-size-xl: 1.5rem;
   --font-size-xxl: 1.875rem;
 
+  --color-white: #faf9f6;
+  --color-black: #1a1a1a;
   --color-primary: #646cff;
-  --color-disabled: lightgray;
-  --color-disabled-text: gray;
-  --color-dark: #434343;
-  --color-light: #f5f5f5;
+  --color-primary-faded: #a6a6ff;
+  --color-secondary: #00d3a2;
+  --color-secondary-faded: #e3f6f5;
+  --color-lightgray: lightgray;
+  --color-lightgray: gray;
+
+  --border-color: var(--color-lightgray);
+  --border-width: 1px;
+
+  background-color: var(--color-white);
+  margin: auto;
 }
+
 #root * {
   box-sizing: border-box;
 }
