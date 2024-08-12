@@ -3,8 +3,8 @@ import "./App.css";
 // State
 import { useCashFloat } from "../state/cashFloat.state.ts";
 // Components
-import { NumberInput } from "./NumberInput";
 import { TotalDisplay } from "./TotalDisplay";
+import { InventoryRow } from "./Inventory/InventoryRow.tsx";
 
 const Container = styled.div`
   height: 100%;
@@ -27,8 +27,12 @@ const Form = styled.form`
   border-radius: var(--border-radius);
 `;
 
-const Row = styled.div`
-  position: relative;
+const InventoryHeaders = styled.div`
+  z-index: 2;
+  position: sticky;
+  top: 0;
+  color: white;
+  background-color: var(--color-black);
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -75,37 +79,20 @@ function App() {
   return (
     <Container>
       <Form action="">
-        <Header>
+        <InventoryHeaders>
           <RowLabel>€</RowLabel>
           <span>units</span>
           <span>rolls</span>
           <span>grams</span>
-        </Header>
+        </InventoryHeaders>
 
         {cashFloat.map((inventory, inventoryIndex) => (
-          <Row key={inventoryIndex}>
-            <RowLabel>
-              <span>{inventory.label}</span>
-              <span style={{ width: "100%", fontSize: "var(--font-size-m)" }}>
-                x {inventory.totalUnits}
-              </span>
-            </RowLabel>
-
-            {Object.entries(inventory.counters).map(([key, counter]) => {
-              const typedKey = key as keyof typeof inventory.counters;
-              return (
-                counter && (
-                  <NumberInput
-                    key={inventoryIndex + key}
-                    value={counter?.count}
-                    onChange={(val: number) =>
-                      setCounter(inventoryIndex, typedKey, val)
-                    }
+          <InventoryRow
+            key={`inventory-${inventoryIndex}`}
+            inventory={inventory}
+            inventoryIndex={inventoryIndex}
+            setCounter={setCounter}
                   />
-                )
-              );
-            })}
-          </Row>
         ))}
       </Form>
       <TotalDisplay total={CashFloatTotalValue} onReset={resetCashFloat} />
