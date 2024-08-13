@@ -49,7 +49,6 @@ Error generating stack: `+o.message+`
   gap: var(--spacing-m);
   border-radius: var(--border-radius);
 `,Z0=fe.div`
-  background-color: var(--color-white);
   flex: 1;
   text-align: center;
   font-size: var(--font-size-xxl);
@@ -57,6 +56,7 @@ Error generating stack: `+o.message+`
   border-radius: var(--border-radius);
   border: var(--border-width) solid var(--border-color);
 `,J0=fe.button`
+  background-color: var(--background-color);
   aspect-ratio: 1;
   height: 100%;
   padding: var(--spacing-l);
@@ -76,37 +76,42 @@ Error generating stack: `+o.message+`
     outline: none;
     border-color: none;
   }
+  @media (prefers-color-scheme: dark) {
+    img {
+      filter: invert(1);
+    }
+  }
 `,q0=({total:e,onReset:t})=>W.jsxs(X0,{children:[W.jsxs(Z0,{children:[e.toFixed(2)," €"]}),W.jsx(J0,{onClick:t,children:W.jsx("img",{src:G0,alt:"Reset"})})]}),b0=fe.input`
   all: unset;
   text-align: center;
   font-size: var(--font-size-xl);
-
-  border: var(--border-width) solid var(--color-black);
   background-color: var(--color-black);
+  border: var(--border-width) solid var(--color-black);
   border-radius: var(--border-radius);
-  color: var(--color-white);
   aspect-ratio: 1/1;
+  font-weight: bold;
+  color: var(--color-white);
 
   &[value="0"] {
-    border-color: var(--color-lightgray);
-    background-color: var(--color-lightgray);
+    background-color: var(--background-color);
+    border-color: var(--color-disabled);
+    color: var(--color-disabled);
   }
 
   &:focus {
-    background-color: var(--color-primary-faded);
+    background-color: var(--color-primary);
+    color: var(--color-white);
     border-color: var(--color-primary-faded);
     font-weight: bold;
   }
 
   @media (prefers-color-scheme: dark) {
     color: var(--color-black);
-    border-color: var(--color-lightgray);
-    background-color: var(--color-lightgray);
+    border-color: var(--color-disabled);
+    background-color: var(--color-disabled);
 
     &[value="0"] {
-      color: var(--color-gray);
-      border-color: var(--color-black);
-      background-color: var(--color-black);
+      background-color: var(--background-color);
     }
 
     &:focus {
@@ -116,7 +121,7 @@ Error generating stack: `+o.message+`
     }
   }
 `,em=({value:e,onChange:t,style:n})=>W.jsx(b0,{type:"number",value:e,onChange:r=>t(+r.target.value),min:0,style:n}),tm="Left",nm="Right",rm="Up",lm="Down",yn={delta:10,preventScrollOnSwipe:!1,rotationAngle:0,trackMouse:!1,trackTouch:!0,swipeDuration:1/0,touchEventOptions:{passive:!0}},qi={first:!0,initial:[0,0],start:0,swiping:!1,xy:[0,0]},Ta="mousemove",Oa="mouseup",om="touchend",im="touchmove",um="touchstart";function sm(e,t,n,r){return e>t?n>0?nm:tm:r>0?lm:rm}function Ra(e,t){if(t===0)return e;const n=Math.PI/180*t,r=e[0]*Math.cos(n)+e[1]*Math.sin(n),l=e[1]*Math.cos(n)-e[0]*Math.sin(n);return[r,l]}function am(e,t){const n=h=>{const m="touches"in h;m&&h.touches.length>1||e((p,v)=>{v.trackMouse&&!m&&(document.addEventListener(Ta,r),document.addEventListener(Oa,i));const{clientX:y,clientY:w}=m?h.touches[0]:h,z=Ra([y,w],v.rotationAngle);return v.onTouchStartOrOnMouseDown&&v.onTouchStartOrOnMouseDown({event:h}),Object.assign(Object.assign(Object.assign({},p),qi),{initial:z.slice(),xy:z,start:h.timeStamp||0})})},r=h=>{e((m,p)=>{const v="touches"in h;if(v&&h.touches.length>1)return m;if(h.timeStamp-m.start>p.swipeDuration)return m.swiping?Object.assign(Object.assign({},m),{swiping:!1}):m;const{clientX:y,clientY:w}=v?h.touches[0]:h,[z,f]=Ra([y,w],p.rotationAngle),a=z-m.xy[0],d=f-m.xy[1],g=Math.abs(a),E=Math.abs(d),x=(h.timeStamp||0)-m.start,S=Math.sqrt(g*g+E*E)/(x||1),P=[a/(x||1),d/(x||1)],j=sm(g,E,a,d),O=typeof p.delta=="number"?p.delta:p.delta[j.toLowerCase()]||yn.delta;if(g<O&&E<O&&!m.swiping)return m;const ee={absX:g,absY:E,deltaX:a,deltaY:d,dir:j,event:h,first:m.first,initial:m.initial,velocity:S,vxvy:P};ee.first&&p.onSwipeStart&&p.onSwipeStart(ee),p.onSwiping&&p.onSwiping(ee);let Ye=!1;return(p.onSwiping||p.onSwiped||p[`onSwiped${j}`])&&(Ye=!0),Ye&&p.preventScrollOnSwipe&&p.trackTouch&&h.cancelable&&h.preventDefault(),Object.assign(Object.assign({},m),{first:!1,eventData:ee,swiping:!0})})},l=h=>{e((m,p)=>{let v;if(m.swiping&&m.eventData){if(h.timeStamp-m.start<p.swipeDuration){v=Object.assign(Object.assign({},m.eventData),{event:h}),p.onSwiped&&p.onSwiped(v);const y=p[`onSwiped${v.dir}`];y&&y(v)}}else p.onTap&&p.onTap({event:h});return p.onTouchEndOrOnMouseUp&&p.onTouchEndOrOnMouseUp({event:h}),Object.assign(Object.assign(Object.assign({},m),qi),{eventData:v})})},o=()=>{document.removeEventListener(Ta,r),document.removeEventListener(Oa,i)},i=h=>{o(),l(h)},u=(h,m)=>{let p=()=>{};if(h&&h.addEventListener){const v=Object.assign(Object.assign({},yn.touchEventOptions),m.touchEventOptions),y=[[um,n,v],[im,r,Object.assign(Object.assign({},v),m.preventScrollOnSwipe?{passive:!1}:{})],[om,l,v]];y.forEach(([w,z,f])=>h.addEventListener(w,z,f)),p=()=>y.forEach(([w,z])=>h.removeEventListener(w,z))}return p},c={ref:h=>{h!==null&&e((m,p)=>{if(m.el===h)return m;const v={};return m.el&&m.el!==h&&m.cleanUpTouch&&(m.cleanUpTouch(),v.cleanUpTouch=void 0),p.trackTouch&&h&&(v.cleanUpTouch=u(h,p)),Object.assign(Object.assign(Object.assign({},m),{el:h}),v)})}};return t.trackMouse&&(c.onMouseDown=n),[c,u]}function cm(e,t,n,r){return!t.trackTouch||!e.el?(e.cleanUpTouch&&e.cleanUpTouch(),Object.assign(Object.assign({},e),{cleanUpTouch:void 0})):e.cleanUpTouch?t.preventScrollOnSwipe!==n.preventScrollOnSwipe||t.touchEventOptions.passive!==n.touchEventOptions.passive?(e.cleanUpTouch(),Object.assign(Object.assign({},e),{cleanUpTouch:r(e.el,t)})):e:Object.assign(Object.assign({},e),{cleanUpTouch:r(e.el,t)})}function fm(e){const{trackMouse:t}=e,n=Le.useRef(Object.assign({},qi)),r=Le.useRef(Object.assign({},yn)),l=Le.useRef(Object.assign({},r.current));l.current=Object.assign({},r.current),r.current=Object.assign(Object.assign({},yn),e);let o;for(o in yn)r.current[o]===void 0&&(r.current[o]=yn[o]);const[i,u]=Le.useMemo(()=>am(s=>n.current=s(n.current,r.current),{trackMouse:t}),[t]);return n.current=cm(n.current,r.current,l.current,u),i}const dm=fe.div`
-  border-bottom: var(--border-width) solid var(--color-black);
+  border-bottom: var(--border-width) solid var(--border-color);
   display: flex;
   width: 100%;
   height: 100px;
@@ -129,8 +134,11 @@ Error generating stack: `+o.message+`
   justify-content: center;
   text-align: left;
   font-size: var(--font-size-xl);
-  background-color: var(--color-white);
-  //   background-color: lightgreen;
+  background-color: var(--background-color);
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-white);
+  }
 `,hm=fe.div`
   position: relative;
   display: flex;
@@ -147,7 +155,8 @@ Error generating stack: `+o.message+`
   display: flex;
   padding: var(--spacing-m);
 `,gm=fe.button`
-  background-color: indianred;
+  background-color: var(--color-primary-faded);
+  color: var(--color-black);
   flex: 1;
   display: flex;
   justify-content: center;
@@ -159,7 +168,7 @@ Error generating stack: `+o.message+`
 `,ym=fe.span`
   width: 100%;
   fontsize: var(--font-size-m);
-`,wm=({inventory:e,inventoryIndex:t,setCounter:n,...r})=>{const[l,o]=Le.useState(!1),i=fm({onSwipedLeft:()=>{o(!0),console.log("swiped left")},onSwipedRight:()=>{o(!1),console.log("swiped right")}});return W.jsxs(dm,{children:[W.jsxs(pm,{children:[W.jsx("span",{children:e.label}),W.jsxs(ym,{style:{width:"100%",fontSize:"var(--font-size-m)"},children:["x ",e.totalUnits]})]}),W.jsxs(hm,{...r,...i,swiped:l,children:[W.jsx(mm,{children:Object.entries(e.counters).map(([u,s])=>{const c=u;return s&&W.jsx(em,{value:s==null?void 0:s.count,onChange:h=>n(t,c,h),style:{width:"100%"}},t+u)})}),W.jsx(vm,{children:W.jsx(gm,{onClick:u=>{u.preventDefault(),Object.entries(e.counters).forEach(([s,c])=>{c&&n(t,s,0)}),o(!1)},children:"delete"})})]})]})},Sm=fe.div`
+`,wm=({inventory:e,inventoryIndex:t,setCounter:n,...r})=>{const[l,o]=Le.useState(!1),i=fm({onSwipedLeft:()=>{o(!0),console.log("swiped left")},onSwipedRight:()=>{o(!1),console.log("swiped right")}});return W.jsxs(dm,{children:[W.jsxs(pm,{children:[W.jsx("span",{children:e.label}),W.jsxs(ym,{style:{width:"100%",fontSize:"var(--font-size-m)"},children:["x ",e.totalUnits]})]}),W.jsxs(hm,{...r,...i,swiped:l,children:[W.jsx(mm,{children:Object.entries(e.counters).map(([u,s])=>{const c=u;return s&&W.jsx(em,{value:s==null?void 0:s.count,onChange:h=>n(t,c,h),style:{width:"100%"}},t+u)})}),W.jsx(vm,{children:W.jsx(gm,{onClick:u=>{u.preventDefault(),Object.entries(e.counters).forEach(([s,c])=>{c&&n(t,s,0)}),o(!1)},children:"reset"})})]})]})},Sm=fe.div`
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -175,7 +184,7 @@ Error generating stack: `+o.message+`
   width: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
-  border: var(--border-width) solid var(--color-black);
+  border: var(--border-width) solid var(--border-color);
   border-radius: var(--border-radius);
 `,Em=fe.div`
   z-index: 2;
@@ -190,6 +199,7 @@ Error generating stack: `+o.message+`
   padding: var(--spacing-m);
   gap: var(--spacing-s);
   font-size: var(--font-size-l);
+  border-bottom: var(--border-width) solid var(--border-color);
 
   & > span {
     flex: 1;
