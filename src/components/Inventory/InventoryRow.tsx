@@ -5,7 +5,7 @@ import { NumberInput } from "./NumberInput";
 import { useSwipeable } from "react-swipeable";
 
 const Row = styled.div`
-  border-bottom: var(--border-width) solid var(--color-black);
+  border-bottom: var(--border-width) solid var(--border-color);
   display: flex;
   width: 100%;
   height: 100px;
@@ -20,8 +20,11 @@ const Label = styled.span`
   justify-content: center;
   text-align: left;
   font-size: var(--font-size-xl);
-  background-color: var(--color-white);
-  //   background-color: lightgreen;
+  background-color: var(--background-color);
+
+  @media (prefers-color-scheme: dark) {
+    color: var(--color-white);
+  }
 `;
 
 const SwipeableContainer = styled.div<{ swiped: boolean }>`
@@ -44,7 +47,8 @@ const ResetContainer = styled.div`
 `;
 
 const ResetButton = styled.button`
-  background-color: indianred;
+  background-color: var(--color-primary-faded);
+  color: var(--color-black);
   flex: 1;
   display: flex;
   justify-content: center;
@@ -125,7 +129,7 @@ export const InventoryRow = ({
               setSwiped(false);
             }}
           >
-            delete
+            reset
           </ResetButton>
         </ResetContainer>
       </SwipeableContainer>

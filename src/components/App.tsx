@@ -24,7 +24,7 @@ const Form = styled.form`
   width: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
-  border: var(--border-width) solid var(--color-black);
+  border: var(--border-width) solid var(--border-color);
   border-radius: var(--border-radius);
 `;
 
@@ -41,6 +41,7 @@ const InventoryHeaders = styled.div`
   padding: var(--spacing-m);
   gap: var(--spacing-s);
   font-size: var(--font-size-l);
+  border-bottom: var(--border-width) solid var(--border-color);
 
   & > span {
     flex: 1;

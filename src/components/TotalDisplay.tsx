@@ -13,7 +13,6 @@ const Container = styled.div`
   border-radius: var(--border-radius);
 `;
 const Total = styled.div`
-  background-color: var(--color-white);
   flex: 1;
   text-align: center;
   font-size: var(--font-size-xxl);
@@ -22,6 +21,7 @@ const Total = styled.div`
   border: var(--border-width) solid var(--border-color);
 `;
 const ResetButton = styled.button`
+  background-color: var(--background-color);
   aspect-ratio: 1;
   height: 100%;
   padding: var(--spacing-l);
@@ -40,6 +40,11 @@ const ResetButton = styled.button`
   &:focus-visible {
     outline: none;
     border-color: none;
+  }
+  @media (prefers-color-scheme: dark) {
+    img {
+      filter: invert(1);
+    }
   }
 `;
 

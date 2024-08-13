@@ -4,33 +4,33 @@ const StyledInput = styled.input`
   all: unset;
   text-align: center;
   font-size: var(--font-size-xl);
-
-  border: var(--border-width) solid var(--color-black);
   background-color: var(--color-black);
+  border: var(--border-width) solid var(--color-black);
   border-radius: var(--border-radius);
-  color: var(--color-white);
   aspect-ratio: 1/1;
+  font-weight: bold;
+  color: var(--color-white);
 
   &[value="0"] {
-    border-color: var(--color-lightgray);
-    background-color: var(--color-lightgray);
+    background-color: var(--background-color);
+    border-color: var(--color-disabled);
+    color: var(--color-disabled);
   }
 
   &:focus {
-    background-color: var(--color-primary-faded);
+    background-color: var(--color-primary);
+    color: var(--color-white);
     border-color: var(--color-primary-faded);
     font-weight: bold;
   }
 
   @media (prefers-color-scheme: dark) {
     color: var(--color-black);
-    border-color: var(--color-lightgray);
-    background-color: var(--color-lightgray);
+    border-color: var(--color-disabled);
+    background-color: var(--color-disabled);
 
     &[value="0"] {
-      color: var(--color-gray);
-      border-color: var(--color-black);
-      background-color: var(--color-black);
+      background-color: var(--background-color);
     }
 
     &:focus {
