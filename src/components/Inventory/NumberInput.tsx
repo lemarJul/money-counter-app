@@ -60,7 +60,7 @@ export const NumberInput = ({
       onFocus={(e) => {
         if (e.target.value === "0") e.target.value = "";
       }}
-      onBlur={(e) => {
+      onBlurCapture={(e) => {
         if (e.target.value == "") e.target.value = "0";
       }}
     ></StyledInput>
