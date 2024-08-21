@@ -14,9 +14,9 @@ const Container = styled.div`
 `;
 const Total = styled.div`
   flex: 1;
-  text-align: center;
   font-size: var(--font-size-xxl);
-  padding: var(--spacing-l);
+  height: 100%;
+  place-content: center;
   border-radius: var(--border-radius);
   border: var(--border-width) solid var(--border-color);
 `;
@@ -57,7 +57,9 @@ export const TotalDisplay = ({
 }) => {
   return (
     <Container>
-      <Total>{total.toFixed(2)} €</Total>
+      <Total>
+        <span>{total.toFixed(2)} €</span>
+      </Total>
       <ResetButton onClick={onReset}>
         <img src={TrashSvg} alt="Reset" />
       </ResetButton>
