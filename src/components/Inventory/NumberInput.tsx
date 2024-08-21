@@ -57,7 +57,12 @@ export const NumberInput = ({
       onChange={(e) => onChange(+e.target.value)}
       min={0}
       style={style}
-      // onClick={(e) => e.target.select()}
+      onFocus={(e) => {
+        if (e.target.value === "0") e.target.value = "";
+      }}
+      onBlur={(e) => {
+        if (e.target.value == "") e.target.value = "0";
+      }}
     ></StyledInput>
   );
 };
