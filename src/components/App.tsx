@@ -16,7 +16,7 @@ const Container = styled.div`
   font-size: 2rem;
 `;
 
-const Form = styled.form`
+const Inventory = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -63,7 +63,7 @@ function App() {
 
   return (
     <Container>
-      <Form action="">
+      <Inventory>
         <InventoryHeaders>
           <RowLabel>€</RowLabel>
           <span>units</span>
@@ -79,7 +79,7 @@ function App() {
             setCounter={setCounter}
           />
         ))}
-      </Form>
+      </Inventory>
       <TotalDisplay total={CashFloatTotalValue} onReset={resetCashFloat} />
     </Container>
   );
