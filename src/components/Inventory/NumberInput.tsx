@@ -63,6 +63,7 @@ export const NumberInput = ({
       onBlurCapture={(e) => {
         if (e.target.value == "") e.target.value = "0";
       }}
+      tabIndex={0}
     ></StyledInput>
   );
 };

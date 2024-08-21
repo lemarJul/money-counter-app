@@ -128,6 +128,7 @@ export const InventoryRow = ({
               });
               setSwiped(false);
             }}
+            tabIndex={-1}
           >
             reset
           </ResetButton>
