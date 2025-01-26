@@ -1,74 +1,13 @@
-import styled from "styled-components";
 import { useState } from "react";
 import { DenominationInventory } from "../../modules/DenominationInventory";
 import { NumberInput } from "./NumberInput";
 import { useSwipeable } from "react-swipeable";
-
-const Row = styled.div`
-  border-bottom: var(--border-width) solid var(--border-color);
-  display: flex;
-  width: 100%;
-  height: 100px;
-`;
-
-const Label = styled.span`
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  padding: var(--spacing-m);
-  min-width: 25%;
-  justify-content: center;
-  text-align: left;
-  font-size: var(--font-size-xl);
-  background-color: var(--background-color);
-
-  @media (prefers-color-scheme: dark) {
-    color: var(--color-white);
-  }
-`;
-
-const SwipeableContainer = styled.div<{ swiped: boolean }>`
-  position: relative;
-  display: flex;
-  min-width: 150%;
-  left: ${({ swiped }) => (swiped ? "-75%" : "0")};
-  transition: left 0.3s;
-`;
-const CountersContainer = styled.div`
-  display: flex;
-  min-width: 50%;
-  padding: var(--spacing-m);
-  gap: var(--spacing-m);
-`;
-const ResetContainer = styled.div`
-  min-width: 50%;
-  display: flex;
-  padding: var(--spacing-m);
-`;
-
-const ResetButton = styled.button`
-  background-color: var(--color-primary-faded);
-  color: var(--color-black);
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  &:focus {
-    outline: none;
-  }
-`;
-
-const TotalCount = styled.span`
-  width: 100%;
-  fontsize: var(--font-size-m);
-`;
+import styles from "./InventoryRow.module.css";
 
 export const InventoryRow = ({
   inventory,
   inventoryIndex,
   setCounter,
-  ...props
 }: {
   inventory: DenominationInventory;
   inventoryIndex: number;
@@ -83,24 +22,25 @@ export const InventoryRow = ({
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
       setSwiped(true);
-      console.log("swiped left");
     },
     onSwipedRight: () => {
       setSwiped(false);
-      console.log("swiped right");
     },
   });
 
   return (
-    <Row>
-      <Label>
+    <div className={styles.row}>
+      <div className={styles.label}>
         <span>{inventory.label}</span>
-        <TotalCount style={{ width: "100%", fontSize: "var(--font-size-m)" }}>
-          x {inventory.totalUnits}
-        </TotalCount>
-      </Label>
-      <SwipeableContainer {...props} {...swipeHandlers} swiped={swiped}>
-        <CountersContainer>
+        <span className={styles.totalCount}>x {inventory.totalUnits}</span>
+      </div>
+      <div
+        className={`${styles.swipeableContainer} ${
+          swiped ? styles.swiped : ""
+        }`}
+        {...swipeHandlers}
+      >
+        <div className={styles.countersContainer}>
           {Object.entries(inventory.counters).map(([key, counter]) => {
             const typedKey = key as keyof typeof inventory.counters;
             return (
@@ -116,10 +56,11 @@ export const InventoryRow = ({
               )
             );
           })}
-        </CountersContainer>
+        </div>
 
-        <ResetContainer>
-          <ResetButton
+        <div className={styles.resetContainer}>
+          <button
+            className={styles.resetButton}
             onClick={(e) => {
               e.preventDefault();
               Object.entries(inventory.counters).forEach(([key, counter]) => {
@@ -131,9 +72,9 @@ export const InventoryRow = ({
             tabIndex={-1}
           >
             reset
-          </ResetButton>
-        </ResetContainer>
-      </SwipeableContainer>
-    </Row>
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };

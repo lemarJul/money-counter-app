@@ -1,52 +1,5 @@
-import styled from "styled-components";
+import styles from "./TotalDisplay.module.css";
 import TrashSvg from "../assets/trash-solid.svg";
-
-const Container = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  max-height: 10%;
-  font-size: 5rem;
-  gap: var(--spacing-m);
-  border-radius: var(--border-radius);
-`;
-const Total = styled.div`
-  flex: 1;
-  font-size: var(--font-size-xxl);
-  height: 100%;
-  place-content: center;
-  border-radius: var(--border-radius);
-  border: var(--border-width) solid var(--border-color);
-`;
-const ResetButton = styled.button`
-  background-color: var(--background-color);
-  aspect-ratio: 1;
-  height: 100%;
-  padding: var(--spacing-l);
-  border: var(--border-width) solid var(--border-color);
-  font-size: var(--font-size-s);
-  border-radius: var(--border-radius);
-  &:hover {
-    border-color: var(--color-primary-faded);
-    background-color: var(--color-primary-faded);
-  }
-  &:active {
-    border-color: var(--color-primary);
-    background-color: var(--color-primary);
-  }
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    border-color: none;
-  }
-  @media (prefers-color-scheme: dark) {
-    img {
-      filter: invert(1);
-    }
-  }
-`;
 
 export const TotalDisplay = ({
   total,
@@ -56,13 +9,13 @@ export const TotalDisplay = ({
   onReset: () => void;
 }) => {
   return (
-    <Container>
-      <Total>
+    <div className={styles.container}>
+      <div className={styles.total}>
         <span>{total.toFixed(2)} €</span>
-      </Total>
-      <ResetButton onClick={onReset}>
+      </div>
+      <button className={styles.resetButton} onClick={onReset}>
         <img src={TrashSvg} alt="Reset" />
-      </ResetButton>
-    </Container>
+      </button>
+    </div>
   );
 };
