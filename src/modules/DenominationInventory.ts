@@ -1,5 +1,6 @@
 import { PerUnitCounter, PerWeightCounter, PerRollCounter } from "./MoneyCounters";
 import { MoneyDenominationType } from './MoneyDenominations';
+import { centToEuro } from './utils';
 
 type CountersType = {
   unit: PerUnitCounter;
@@ -52,8 +53,4 @@ export class DenominationInventory {
   public get totalValue(): number {
     return centToEuro(this.totalUnits * this.denomination.value);
   }
-}
-
-function centToEuro(value: number): number {
-  return +(value / 100);
 }
