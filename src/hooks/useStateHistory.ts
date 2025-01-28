@@ -2,20 +2,24 @@ import { useState, useCallback } from "react";
 
 export function useStateHistory<T>(
   initialState: T,
-  maxHistory: number = 30
+  maxHistory: number = 30,
+  hydrate?: (value: T) => T
 ) {
-  const [history, setHistory] = useState<T[]>([initialState]);
+  const [history, setHistory] = useState<T[]>([
+    hydrate ? hydrate(initialState) : initialState
+  ]);
   const [historyIndex, setHistoryIndex] = useState(0);
 
   const updateHistory = useCallback(
     (newState: T) => {
       setHistory(prev => {
         const newHistory = prev.slice(0, historyIndex + 1);
-        return [...newHistory, newState].slice(-maxHistory);
+        const stateToAdd = hydrate ? hydrate(newState) : newState;
+        return [...newHistory, stateToAdd].slice(-maxHistory);
       });
       setHistoryIndex(prev => Math.min(prev + 1, maxHistory - 1));
     },
-    [historyIndex, maxHistory]
+    [historyIndex, maxHistory, hydrate]
   );
 
   const undo = useCallback(() => {
