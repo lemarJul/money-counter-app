@@ -1,6 +1,6 @@
 import { Container, Paper, Typography, Grid } from "@mui/material";
 
-import { useTillCount } from "../state/tillCount.state";
+import { useTillCount } from "../hooks/useTillCount";
 import { TotalDisplay } from "./TotalDisplay";
 import { DenominationRow } from "./row/DenominationRow";
 import { DenominationCountInterface } from "../modules/DenominationCounter.types";
