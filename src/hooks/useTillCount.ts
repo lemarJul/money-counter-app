@@ -1,26 +1,10 @@
 import { useMemo, useCallback } from "react";
 import { DenominationCount } from "../modules/DenominationCounter";
 import type { DenominationCountInterface } from "../modules/DenominationCounter.types";
-import { useStateHistory } from "../hooks/useStateHistory";
-import { usePersistedState } from "../hooks/usePersistedState";
+import { useStateHistory } from "./useStateHistory";
+import { usePersistedState } from "./usePersistedState";
 import { loadTillCount } from "../modules/localStorage";
-
-// Helper to hydrate plain objects into DenominationCount instances
-const hydrateDenominationCounts = (
-  counts: DenominationCountInterface[]
-): DenominationCount[] => {
-  return counts.map(
-    (count) =>
-      new DenominationCount({
-        denomination: count.denomination,
-        countersInit: {
-          unit: count.counterSet.unit.count,
-          ...(count.counterSet.roll && { roll: count.counterSet.roll.count }),
-          ...(count.counterSet.weight && { weight: count.counterSet.weight.count }),
-        },
-      })
-  );
-};
+import { hydrateDenominationCounts } from "../modules/tillCount.hydration";
 
 export function useTillCount() {
   const initialState = loadTillCount();
