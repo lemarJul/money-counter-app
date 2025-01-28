@@ -2,16 +2,12 @@ import { useState, useMemo, useEffect, useCallback } from "react";
 import { loadTillCount, storeTillCount } from "../modules/localStorage";
 import { DenominationCount } from "../modules/DenominationCounter";
 import type { DenominationCountInterface } from "../modules/DenominationCounter.types";
-
-const MAX_HISTORY = 30; // Maximum number of states to keep in history
+import { useStateHistory } from "../hooks/useStateHistory";
 
 export function useTillCount() {
   const initialState = loadTillCount();
   const [tillCount, setTillCount] = useState(initialState);
-  const [history, setHistory] = useState<DenominationCountInterface[][]>([
-    initialState,
-  ]);
-  const [historyIndex, setHistoryIndex] = useState(0);
+  const { updateHistory, undo: undoHistory, redo: redoHistory, canUndo, canRedo } = useStateHistory(initialState);
 
   // Save to localStorage whenever cashCount changes
   useEffect(() => {
@@ -19,69 +15,8 @@ export function useTillCount() {
     console.log("saved to local storage");
   }, [tillCount]);
 
-  // Update history when cashCount changes
-  const updateHistory = useCallback(
-    (newState: DenominationCountInterface[]) => {
-      setHistory((prev) => {
-        // Remove any future states if we're not at the end
-        const newHistory = prev.slice(0, historyIndex + 1);
-        // Add new state and limit history length
-        return [...newHistory, newState].slice(-MAX_HISTORY);
-      });
-      setHistoryIndex((prev) => Math.min(prev + 1, MAX_HISTORY - 1));
-    },
-    [historyIndex]
-  );
-
-  const undo = useCallback(() => {
-    if (historyIndex > 0) {
-      const newIndex = historyIndex - 1;
-      const previousState = history[newIndex];
-      if (previousState) {
-        setHistoryIndex(newIndex);
-        setTillCount(previousState);
-      }
-    }
-  }, [historyIndex, history]);
-
-  // const navigateHistory = useCallback(
-  //   (n: -1 | 1) => {
-  //     let newIndex = historyIndex + n;
-  //     newIndex =
-  //       newIndex < O
-  //         ? 0
-  //         : newIndex > historyIndex + 1
-  //         ? history.length - 1
-  //         : newIndex;
-  //     const nextState = history[newIndex];
-  //     if (nextState) {
-  //       setHistoryIndex(delta);
-  //       setTillCount(nextState);
-  //     }
-  //   },
-  //   [historyIndex, history]
-  // );
-
-  const redo = useCallback(() => {
-    if (historyIndex < history.length - 1) {
-      const newIndex = historyIndex + 1;
-      const nextState = history[newIndex];
-      if (nextState) {
-        setHistoryIndex(newIndex);
-        setTillCount(nextState);
-      }
-    }
-  }, [historyIndex, history]);
-
-  const canUndo = historyIndex > 0;
-  const canRedo = historyIndex < history.length - 1;
-
   const tillCountTotalValue = useMemo(
-    () =>
-      tillCount.reduce(
-        (acc: number, denomination) => acc + denomination.totalValue,
-        0
-      ),
+    () => tillCount.reduce((acc: number, denomination) => acc + denomination.totalValue, 0),
     [tillCount]
   );
 
@@ -143,13 +78,23 @@ export function useTillCount() {
     updateHistory(newState);
   }, [tillCount, updateHistory]);
 
+  const handleUndo = useCallback(() => {
+    const previousState = undoHistory();
+    if (previousState) setTillCount(previousState);
+  }, [undoHistory]);
+
+  const handleRedo = useCallback(() => {
+    const nextState = redoHistory();
+    if (nextState) setTillCount(nextState);
+  }, [redoHistory]);
+
   return {
     tillCount,
     tillCountTotalValue,
     updateTillCount,
     resetTillCount,
-    undo,
-    redo,
+    undo: handleUndo,
+    redo: handleRedo,
     canUndo,
     canRedo,
   };
