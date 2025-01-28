@@ -7,6 +7,10 @@ export interface DenominationCountInterface {
   label: string;
   totalUnits: number;
   totalValue: number;
+  updateCounter(
+    counterKey: keyof DenominationCountInterface["counterSet"],
+    newValue: number
+  ): DenominationCountInterface;
 }
 
 export type counterSetType = {

@@ -15,6 +15,17 @@ import type {
 import type { MoneyDataType } from "../data/Euro";
 
 export class DenominationCount implements DenominationCountInterface {
+  static createEmpty(denomination: MoneyDataType): DenominationCount {
+    return new DenominationCount({
+      denomination,
+      countersInit: {
+        unit: 0,
+        ...(denomination.rollCapacity && { roll: 0 }),
+        ...(denomination.unitWeight && { weight: 0 }),
+      },
+    });
+  }
+
   public readonly denomination: MoneyDataType;
   public readonly counterSet: counterSetType;
 
@@ -58,5 +69,24 @@ export class DenominationCount implements DenominationCountInterface {
 
   get totalValue(): number {
     return centToEuro(this.totalUnits * this.denomination.value);
+  }
+
+  updateCounter(
+    counterKey: keyof DenominationCountInterface["counterSet"],
+    newValue: number
+  ): DenominationCount {
+    return new DenominationCount({
+      denomination: this.denomination,
+      countersInit: {
+        unit: counterKey === "unit" ? newValue : this.counterSet.unit.count,
+        ...(this.counterSet.roll && {
+          roll: counterKey === "roll" ? newValue : this.counterSet.roll.count,
+        }),
+        ...(this.counterSet.weight && {
+          weight:
+            counterKey === "weight" ? newValue : this.counterSet.weight.count,
+        }),
+      },
+    });
   }
 }
