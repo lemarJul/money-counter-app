@@ -1,19 +1,39 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
-import { loadTillCount, storeTillCount } from "../modules/localStorage";
+import { useMemo, useCallback } from "react";
 import { DenominationCount } from "../modules/DenominationCounter";
 import type { DenominationCountInterface } from "../modules/DenominationCounter.types";
 import { useStateHistory } from "../hooks/useStateHistory";
+import { usePersistedState } from "../hooks/usePersistedState";
+import { loadTillCount } from "../modules/localStorage";
+
+// Helper to hydrate plain objects into DenominationCount instances
+const hydrateDenominationCounts = (
+  counts: DenominationCountInterface[]
+): DenominationCount[] => {
+  return counts.map(
+    (count) =>
+      new DenominationCount({
+        denomination: count.denomination,
+        countersInit: {
+          unit: count.counterSet.unit.count,
+          ...(count.counterSet.roll && { roll: count.counterSet.roll.count }),
+          ...(count.counterSet.weight && { weight: count.counterSet.weight.count }),
+        },
+      })
+  );
+};
 
 export function useTillCount() {
   const initialState = loadTillCount();
-  const [tillCount, setTillCount] = useState(initialState);
-  const { updateHistory, undo: undoHistory, redo: redoHistory, canUndo, canRedo } = useStateHistory(initialState);
-
-  // Save to localStorage whenever cashCount changes
-  useEffect(() => {
-    storeTillCount(tillCount);
-    console.log("saved to local storage");
-  }, [tillCount]);
+  const [tillCount, setTillCount] = usePersistedState(
+    "tillCount",
+    initialState,
+    hydrateDenominationCounts
+  );
+  const { updateHistory, undo: undoHistory, redo: redoHistory, canUndo, canRedo } = useStateHistory(
+    initialState,
+    30,
+    hydrateDenominationCounts
+  );
 
   const tillCountTotalValue = useMemo(
     () => tillCount.reduce((acc: number, denomination) => acc + denomination.totalValue, 0),
@@ -27,66 +47,39 @@ export function useTillCount() {
       newValue: number
     ) => {
       setTillCount((prev) => {
-        console.log({ prev });
         const denominationCount = prev[denominationIndex];
         if (!denominationCount) return prev;
 
-        // Create new counterSet object with updated value
-        const countersInit = {
-          unit:
-            counterKey === "unit"
-              ? newValue
-              : denominationCount.counterSet.unit.count,
-          ...(denominationCount.counterSet.roll && {
-            roll:
-              counterKey === "roll"
-                ? newValue
-                : denominationCount.counterSet.roll.count,
-          }),
-          ...(denominationCount.counterSet.weight && {
-            weight:
-              counterKey === "weight"
-                ? newValue
-                : denominationCount.counterSet.weight.count,
-          }),
-        };
-
         const newState = [...prev];
-        newState[denominationIndex] = new DenominationCount({
-          denomination: denominationCount.denomination,
-          countersInit,
-        });
+        newState[denominationIndex] = denominationCount.updateCounter(counterKey, newValue);
         updateHistory(newState);
         return newState;
       });
     },
-    [updateHistory]
+    [updateHistory, setTillCount]
   );
 
   const resetTillCount = useCallback(() => {
-    const newState = tillCount.map((denomination) => {
-      return new DenominationCount({
-        denomination: denomination.denomination,
-        countersInit: {
-          unit: 0,
-          ...(denomination.counterSet.roll && { roll: 0 }),
-          ...(denomination.counterSet.weight && { weight: 0 }),
-        },
-      });
-    });
+    const newState = tillCount.map((denomination) =>
+      DenominationCount.createEmpty(denomination.denomination)
+    );
     setTillCount(newState);
     updateHistory(newState);
-  }, [tillCount, updateHistory]);
+  }, [tillCount, setTillCount, updateHistory]);
 
   const handleUndo = useCallback(() => {
     const previousState = undoHistory();
-    if (previousState) setTillCount(previousState);
-  }, [undoHistory]);
+    if (previousState) {
+      setTillCount(previousState);
+    }
+  }, [setTillCount, undoHistory]);
 
   const handleRedo = useCallback(() => {
     const nextState = redoHistory();
-    if (nextState) setTillCount(nextState);
-  }, [redoHistory]);
+    if (nextState) {
+      setTillCount(nextState);
+    }
+  }, [setTillCount, redoHistory]);
 
   return {
     tillCount,
