@@ -1,19 +1,21 @@
 import { Container, Paper, Typography, Grid } from "@mui/material";
-import { useCashCount } from "../state/cashFloat.state";
+
+import { useTillCount } from "../state/tillCount.state";
 import { TotalDisplay } from "./TotalDisplay";
-import { InventoryRow } from "./Inventory/InventoryRow";
+import { DenominationRow } from "./row/DenominationRow";
+import { DenominationCountInterface } from "../modules/DenominationCounter.types";
 
 function App() {
   const {
-    cashCount: cashFloat,
-    cashCountTotalValue: CashFloatTotalValue,
-    setCounter,
-    resetCashCount: resetCashFloat,
+    tillCount,
+    tillCountTotalValue,
+    updateTillCount,
+    resetTillCount,
     undo,
     redo,
     canUndo,
     canRedo,
-  } = useCashCount();
+  } = useTillCount();
 
   return (
     <Container maxWidth="md" sx={{ height: "100%", py: 2 }}>
@@ -65,19 +67,25 @@ function App() {
           }}
           elevation={0}
         >
-          {cashFloat.map((inventory, inventoryIndex) => (
-            <InventoryRow
-              key={`inventory-${inventoryIndex}`}
-              inventory={inventory}
-              inventoryIndex={inventoryIndex}
-              setCounter={setCounter}
-            />
-          ))}
+          {tillCount.map((denomination, index) => {
+            return (
+              <DenominationRow
+                key={denomination.denomination.id}
+                label={denomination.label}
+                totalUnits={denomination.totalUnits}
+                counterSet={denomination.counterSet}
+                setCount={(
+                  counterKey: keyof DenominationCountInterface["counterSet"],
+                  newValue: number
+                ) => updateTillCount(index, counterKey, newValue)}
+              />
+            );
+          })}
         </Paper>
 
         <TotalDisplay
-          total={CashFloatTotalValue}
-          onReset={resetCashFloat}
+          total={tillCountTotalValue}
+          onReset={resetTillCount}
           onUndo={undo}
           onRedo={redo}
           canUndo={canUndo}
