@@ -1,36 +1,90 @@
-import styles from "./App.module.css";
-import "./App.css";
-// State
-import { useCashFloat } from "../state/cashFloat.state.ts";
-// Components
+import { Container, Paper, Typography, Grid } from "@mui/material";
+import { useCashCount } from "../state/cashFloat.state";
 import { TotalDisplay } from "./TotalDisplay";
-import { InventoryRow } from "./Inventory/InventoryRow.tsx";
+import { InventoryRow } from "./Inventory/InventoryRow";
 
 function App() {
-  const { cashFloat, CashFloatTotalValue, setCounter, resetCashFloat } =
-    useCashFloat();
+  const {
+    cashCount: cashFloat,
+    cashCountTotalValue: CashFloatTotalValue,
+    setCounter,
+    resetCashCount: resetCashFloat,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useCashCount();
 
   return (
-    <div className={styles.container}>
-      <div className={styles.inventory}>
-        <div className={styles.inventoryHeaders}>
-          <span className={styles.rowLabel}>€</span>
-          <span>units</span>
-          <span>rolls</span>
-          <span>grams</span>
-        </div>
+    <Container maxWidth="md" sx={{ height: "100%", py: 2 }}>
+      <Paper
+        elevation={3}
+        sx={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        }}
+      >
+        <Grid
+          container
+          sx={{
+            p: 2,
+            borderBottom: 1,
+            borderColor: "divider",
+            bgcolor: "background.default",
+          }}
+        >
+          <Grid item xs={3}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              €
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              units
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              rolls
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              grams
+            </Typography>
+          </Grid>
+        </Grid>
 
-        {cashFloat.map((inventory, inventoryIndex) => (
-          <InventoryRow
-            key={`inventory-${inventoryIndex}`}
-            inventory={inventory}
-            inventoryIndex={inventoryIndex}
-            setCounter={setCounter}
-          />
-        ))}
-      </div>
-      <TotalDisplay total={CashFloatTotalValue} onReset={resetCashFloat} />
-    </div>
+        <Paper
+          sx={{
+            flex: 1,
+            overflow: "auto",
+            bgcolor: "background.default",
+          }}
+          elevation={0}
+        >
+          {cashFloat.map((inventory, inventoryIndex) => (
+            <InventoryRow
+              key={`inventory-${inventoryIndex}`}
+              inventory={inventory}
+              inventoryIndex={inventoryIndex}
+              setCounter={setCounter}
+            />
+          ))}
+        </Paper>
+
+        <TotalDisplay
+          total={CashFloatTotalValue}
+          onReset={resetCashFloat}
+          onUndo={undo}
+          onRedo={redo}
+          canUndo={canUndo}
+          canRedo={canRedo}
+        />
+      </Paper>
+    </Container>
   );
 }
 

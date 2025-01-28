@@ -1,80 +1,63 @@
-import { useState } from "react";
+import { Grid, Typography, Box } from "@mui/material";
 import { DenominationInventory } from "../../modules/DenominationInventory";
 import { NumberInput } from "./NumberInput";
-import { useSwipeable } from "react-swipeable";
-import styles from "./InventoryRow.module.css";
+
+interface InventoryRowProps {
+  inventory: DenominationInventory;
+  inventoryIndex: number;
+  setCounter: (
+    inventoryIndex: number,
+    counterKey: keyof DenominationInventory["counters"],
+    newValue: number
+  ) => void;
+}
 
 export const InventoryRow = ({
   inventory,
   inventoryIndex,
   setCounter,
-}: {
-  inventory: DenominationInventory;
-  inventoryIndex: number;
-  setCounter: (
-    inventoryIndex: number,
-    counterKey: keyof typeof inventory.counters,
-    value: number
-  ) => void;
-}) => {
-  const [swiped, setSwiped] = useState(false);
-
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => {
-      setSwiped(true);
-    },
-    onSwipedRight: () => {
-      setSwiped(false);
-    },
-  });
-
+}: InventoryRowProps) => {
   return (
-    <div className={styles.row}>
-      <div className={styles.label}>
-        <span>{inventory.label}</span>
-        <span className={styles.totalCount}>x {inventory.totalUnits}</span>
-      </div>
-      <div
-        className={`${styles.swipeableContainer} ${
-          swiped ? styles.swiped : ""
-        }`}
-        {...swipeHandlers}
-      >
-        <div className={styles.countersContainer}>
-          {Object.entries(inventory.counters).map(([key, counter]) => {
-            const typedKey = key as keyof typeof inventory.counters;
-            return (
-              counter && (
-                <NumberInput
-                  key={inventoryIndex + key}
-                  value={counter?.count}
-                  onChange={(val: number) =>
-                    setCounter(inventoryIndex, typedKey, val)
-                  }
-                  style={{ width: "100%" }}
-                />
-              )
-            );
-          })}
-        </div>
-
-        <div className={styles.resetContainer}>
-          <button
-            className={styles.resetButton}
-            onClick={(e) => {
-              e.preventDefault();
-              Object.entries(inventory.counters).forEach(([key, counter]) => {
-                const typedKey = key as keyof typeof inventory.counters;
-                if (counter) setCounter(inventoryIndex, typedKey, 0);
-              });
-              setSwiped(false);
-            }}
-            tabIndex={-1}
-          >
-            reset
-          </button>
-        </div>
-      </div>
-    </div>
+    <Grid
+      container
+      spacing={2}
+      alignItems="center"
+      sx={{
+        p: 1,
+        borderBottom: 1,
+        borderColor: "divider",
+      }}
+    >
+      <Grid item xs={3}>
+        <Box>
+          <Typography variant="body1">{inventory.label}</Typography>
+          <Typography variant="caption" color="text.secondary">
+            x {inventory.totalUnits}
+          </Typography>
+        </Box>
+      </Grid>
+      <Grid item xs={3}>
+        <NumberInput
+          value={inventory.counters.unit.count}
+          onChange={(value) => setCounter(inventoryIndex, "unit", value)}
+        />
+      </Grid>
+      <Grid item xs={3}>
+        {inventory.counters.roll && (
+          <NumberInput
+            value={inventory.counters.roll.count}
+            onChange={(value) => setCounter(inventoryIndex, "roll", value)}
+          />
+        )}
+      </Grid>
+      <Grid item xs={3}>
+        {inventory.counters.weight && (
+          <NumberInput
+            value={inventory.counters.weight.count}
+            onChange={(value) => setCounter(inventoryIndex, "weight", value)}
+          />
+        )}
+      </Grid>
+    </Grid>
   );
 };
