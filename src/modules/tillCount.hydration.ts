@@ -1,10 +1,10 @@
 import { DenominationCount } from "./DenominationCounter";
 import type { DenominationCountInterface } from "./DenominationCounter.types";
-import { EuroData } from "../data/Euro";
-import type { MoneyDataType } from "../data/Euro";
+import { EUR_DENOMINATIONS } from "../data/Euro";
+import type { IDenomination } from "../data/Money.types";
 
 interface StoredDenomination {
-  denomination: MoneyDataType;
+  denomination: IDenomination;
   counterSet: {
     unit: { count: number };
     roll?: { count: number };
@@ -39,7 +39,7 @@ export const validateStoredDenomination = (
 
   // Validate denomination exists in MoneyDenominations
   if (
-    !EuroData.some(
+    !EUR_DENOMINATIONS.some(
       (d) =>
         d.value === typedItem.denomination.value &&
         d.rollCapacity === typedItem.denomination.rollCapacity &&

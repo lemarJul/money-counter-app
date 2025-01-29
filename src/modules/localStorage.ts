@@ -1,6 +1,7 @@
 import { DenominationCount } from "./DenominationCounter";
 import type { DenominationCountInterface } from "./DenominationCounter.types";
-import { EuroData } from "../data/Euro";
+import { EUR_DENOMINATIONS } from "../data/Euro";
+import type { IDenomination } from "../data/Money.types";
 import {
   validateStoredDenominations,
   hydrateDenominationCounts,
@@ -13,8 +14,8 @@ export const loadTillCount = (): DenominationCountInterface[] => {
   const stored = localStorage.getItem(STORAGE_KEY);
 
   if (!stored) {
-    return EuroData.map(
-      (denomination) => new DenominationCount({ denomination })
+    return EUR_DENOMINATIONS.map((denomination: IDenomination) =>
+      DenominationCount.createEmpty(denomination)
     );
   }
 
@@ -28,8 +29,8 @@ export const loadTillCount = (): DenominationCountInterface[] => {
     console.error("Error loading till count from storage:", error);
     // Clear invalid data from localStorage
     localStorage.removeItem(STORAGE_KEY);
-    return EuroData.map(
-      (denomination) => new DenominationCount({ denomination })
+    return EUR_DENOMINATIONS.map((denomination: IDenomination) =>
+      DenominationCount.createEmpty(denomination)
     );
   }
 };

@@ -12,10 +12,11 @@ import type {
   ConstructorParams,
 } from "./DenominationCounter.types";
 
-import type { MoneyDataType } from "../data/Euro";
+import type { IDenomination } from "../data/Money.types";
+import { EUR } from "../data/Euro";
 
 export class DenominationCount implements DenominationCountInterface {
-  static createEmpty(denomination: MoneyDataType): DenominationCount {
+  static createEmpty(denomination: IDenomination): DenominationCount {
     return new DenominationCount({
       denomination,
       countersInit: {
@@ -26,7 +27,7 @@ export class DenominationCount implements DenominationCountInterface {
     });
   }
 
-  public readonly denomination: MoneyDataType;
+  public readonly denomination: IDenomination;
   public readonly counterSet: counterSetType;
 
   constructor({ denomination, countersInit }: ConstructorParams) {
@@ -57,8 +58,10 @@ export class DenominationCount implements DenominationCountInterface {
   }
 
   get label(): string {
-    const euroVal = centToEuro(this.denomination.value);
-    return `${euroVal >= 1 ? euroVal : euroVal.toFixed(2)}€`;
+    // TODO: Make this generic for all currencies
+    // For now, keeping Euro-specific logic until currency formatting is properly abstracted
+    const value = centToEuro(this.denomination.value);
+    return `${value >= 1 ? value : value.toFixed(2)}${EUR.symbol}`;
   }
 
   get totalUnits(): number {

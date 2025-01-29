@@ -1,8 +1,8 @@
-import { MoneyDataType } from "../data/Euro";
+import type { IDenomination } from "../data/Money.types";
 import { Counter } from "./Counter";
 
 export interface DenominationCountInterface {
-  denomination: MoneyDataType;
+  denomination: IDenomination;
   counterSet: counterSetType;
   label: string;
   totalUnits: number;
@@ -26,6 +26,6 @@ export type InitialCountsType = {
 };
 
 export type ConstructorParams = {
-  denomination: MoneyDataType;
+  denomination: IDenomination;
   countersInit?: InitialCountsType;
 };
