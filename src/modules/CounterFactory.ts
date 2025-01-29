@@ -1,12 +1,10 @@
 import { Counter, CounterConstructorParams } from "./Counter";
-import { PerWeightStrategy, PerPackageStrategy } from "./CountStrategies";
+import { PerGramStrategy, PerRollStrategy } from "./CountStrategies";
 
 export type CounterFactoryOptions = Omit<
   CounterConstructorParams,
   "countStrategy"
 >;
-
-export type CounterUnitValue = "unit" | "roll" | "gram";
 
 export type RollCounterOptions = CounterFactoryOptions & {
   capacity: number;
@@ -25,7 +23,7 @@ export const createRollCounter = ({
 }: RollCounterOptions): Counter =>
   new Counter({
     ...rest,
-    countStrategy: new PerPackageStrategy(capacity, "roll"),
+    countStrategy: new PerRollStrategy(capacity),
   });
 
 export const createPerGramCounter = ({
@@ -34,5 +32,5 @@ export const createPerGramCounter = ({
 }: PerGramCounterOptions): Counter =>
   new Counter({
     ...rest,
-    countStrategy: new PerWeightStrategy(unitWeight, "gram"),
+    countStrategy: new PerGramStrategy(unitWeight),
   });

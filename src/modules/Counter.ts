@@ -3,23 +3,26 @@ import { countStrategyInterface, PerUnitStrategy } from "./CountStrategies";
 export interface CounterConstructorParams {
   initialCount?: number;
   countStrategy?: countStrategyInterface;
-  unitValue?: string;
   allowNegativeCount?: boolean;
 }
 
 export class Counter {
   private _count;
-  private strategy;
+  private countStrategy;
   readonly allowNegativeCount;
 
-  constructor(options: CounterConstructorParams) {
-    this._count = options.initialCount || 0;
-    this.strategy =
-      options.countStrategy || new PerUnitStrategy(options.unitValue);
-    this.allowNegativeCount = options.allowNegativeCount || false;
+  constructor({
+    initialCount = 0,
+    countStrategy = new PerUnitStrategy(),
+    allowNegativeCount = false,
+  }: CounterConstructorParams = {}) {
+    this._count = initialCount;
+    this.countStrategy = countStrategy;
+    this.allowNegativeCount = allowNegativeCount;
   }
-  get unit() {
-    return this.strategy.unit;
+
+  get countingUnit() {
+    return this.countStrategy.countingUnit;
   }
 
   set count(n: number) {
@@ -31,7 +34,7 @@ export class Counter {
   }
 
   get unitQuantity(): number {
-    return this.strategy.count(this._count);
+    return this.countStrategy.count(this._count);
   }
 }
 export type CounterType = typeof Counter;
