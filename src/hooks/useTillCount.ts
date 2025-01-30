@@ -1,41 +1,111 @@
 import { useMemo, useCallback } from "react";
-import { DenominationCount } from "../modules/DenominationCounter";
-import type { DenominationCountInterface } from "../modules/DenominationCounter.types";
+import { DenominationCounter } from "../modules/DenominationCounter";
+import type { counterSetType } from "../modules/DenominationCounter.types";
 import { useStateHistory } from "./useStateHistory";
 import { usePersistedState } from "./usePersistedState";
-import { loadTillCount } from "../modules/localStorage";
-import { hydrateDenominationCounts } from "../modules/tillCount.hydration";
+import {
+  createTillCount,
+  hydrateTillCountFromStorage,
+  type StoredTillCountNew,
+} from "../modules/tillCountUtils";
+import { ICurrencyMetadata, IDenomination } from "../data/Money.types";
 
-export function useTillCount() {
-  const initialState = loadTillCount();
-  const [tillCount, setTillCount] = usePersistedState(
-    "tillCount",
-    initialState,
-    hydrateDenominationCounts
+export function useTillCount(
+  currencyMetaData: ICurrencyMetadata,
+  denominations: readonly IDenomination[]
+) {
+  // Initial stored state
+  const storedState = useMemo(
+    (): StoredTillCountNew => ({
+      state: [],
+      currencyMetaData,
+      denominations,
+    }),
+    [currencyMetaData, denominations]
   );
-  const { updateHistory, undo: undoHistory, redo: redoHistory, canUndo, canRedo } = useStateHistory(
-    initialState,
-    30,
-    hydrateDenominationCounts
+
+  // Hydration function to convert stored state to runtime state
+  const hydrationFunction = useCallback(
+    (stored: unknown) =>
+      hydrateTillCountFromStorage(currencyMetaData, denominations, stored),
+    [currencyMetaData, denominations]
+  );
+
+  // Dehydration function to convert runtime state to stored state
+  const dehydrationFunction = useCallback(
+    (runtime: DenominationCounter[]): StoredTillCountNew => ({
+      state: runtime.map((counter) => ({
+        id: counter.denomination.id,
+        unit: counter.counterSet.unit.count,
+        ...(counter.counterSet.weight?.count && {
+          weight: counter.counterSet.weight.count,
+        }),
+        ...(counter.counterSet.roll?.count && {
+          roll: counter.counterSet.roll.count,
+        }),
+      })),
+      currencyMetaData,
+      denominations,
+    }),
+    [currencyMetaData, denominations]
+  );
+
+  // Runtime state
+  const [tillCount, setTillCount] = usePersistedState<
+    StoredTillCountNew,
+    DenominationCounter[]
+  >("tillCount", storedState, hydrationFunction, dehydrationFunction);
+
+  // Initial runtime state for history
+  const initialRuntimeState = useMemo(
+    () => createTillCount(currencyMetaData, denominations),
+    [currencyMetaData, denominations]
+  );
+
+  const historyConfig = useMemo(
+    () => ({
+      initialState: initialRuntimeState,
+      maxHistoryLength: 30,
+    }),
+    [initialRuntimeState]
+  );
+
+  const {
+    updateHistory,
+    undo: undoHistory,
+    redo: redoHistory,
+    canUndo,
+    canRedo,
+  } = useStateHistory<DenominationCounter[]>(
+    historyConfig.initialState,
+    historyConfig.maxHistoryLength
   );
 
   const tillCountTotalValue = useMemo(
-    () => tillCount.reduce((acc: number, denomination) => acc + denomination.totalValue, 0),
+    () =>
+      tillCount.reduce(
+        (acc: number, denomination: DenominationCounter) =>
+          acc + denomination.totalValue,
+        0
+      ),
     [tillCount]
   );
 
   const updateTillCount = useCallback(
     (
       denominationIndex: number,
-      counterKey: keyof DenominationCountInterface["counterSet"],
+      counterKey: keyof counterSetType,
       newValue: number
     ) => {
-      setTillCount((prev) => {
+      setTillCount((prev: DenominationCounter[]) => {
         const denominationCount = prev[denominationIndex];
         if (!denominationCount) return prev;
 
         const newState = [...prev];
-        newState[denominationIndex] = denominationCount.updateCounter(counterKey, newValue);
+        newState[denominationIndex] = denominationCount.updateCounter(
+          counterKey,
+          newValue
+        );
         updateHistory(newState);
         return newState;
       });
@@ -44,12 +114,16 @@ export function useTillCount() {
   );
 
   const resetTillCount = useCallback(() => {
-    const newState = tillCount.map((denomination) =>
-      DenominationCount.createEmpty(denomination.denomination)
+    const newState = tillCount.map(
+      (denomination: DenominationCounter) =>
+        new DenominationCounter({
+          denomination: denomination.denomination,
+          currencyMetaData,
+        })
     );
     setTillCount(newState);
     updateHistory(newState);
-  }, [tillCount, setTillCount, updateHistory]);
+  }, [tillCount, setTillCount, updateHistory, currencyMetaData]);
 
   const handleUndo = useCallback(() => {
     const previousState = undoHistory();

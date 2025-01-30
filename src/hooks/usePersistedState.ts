@@ -1,38 +1,44 @@
 import { useState, useEffect } from "react";
 
-export function usePersistedState<T>( // Custom hook to manage persistent state in localStorage.
+export function usePersistedState<TStored, TRuntime>( // Custom hook to manage persistent state in localStorage.
   key: string, // Key used to store the state in localStorage.
-  initialValue: T, // Initial value for the state.
-  hydrate?: (value: T) => T // Optional function to hydrate the parsed value from localStorage.
+  initialValue: TStored, // Initial value for storage
+  hydrate: (value: unknown) => TRuntime, // Function to convert stored value to runtime value
+  dehydrate: (value: TRuntime) => TStored, // Function to convert runtime value to storage format
+  skipInitialLoad: boolean = false // Optional flag to skip initial load from localStorage
 ) {
-  const [state, setState] = useState<T>(() => {
+  const [state, setState] = useState<TRuntime>(() => {
+    if (skipInitialLoad) {
+      return hydrate(initialValue);
+    }
+
     // Attempt to load state from localStorage.
     try {
       const item = localStorage.getItem(key);
       const parsed = item ? JSON.parse(item) : initialValue;
-      return hydrate ? hydrate(parsed) : parsed;
+      return hydrate(parsed);
     } catch (error) {
       console.error("Error loading from localStorage:", error);
-      return initialValue;
+      return hydrate(initialValue);
     }
   });
 
   useEffect(() => {
     // Attempt to save state to localStorage.
     try {
-      localStorage.setItem(key, JSON.stringify(state));
+      // Store the state in its storage format
+      localStorage.setItem(key, JSON.stringify(dehydrate(state)));
     } catch (error) {
       console.error("Error saving to localStorage:", error);
     }
   }, [key, state]);
 
   // Setter function with hydration support.
-  const setStateWithHydration = (value: T | ((prev: T) => T)) => {
+  const setStateWithHydration = (value: TRuntime | ((prev: TRuntime) => TRuntime)) => {
     setState((prev) => {
-      // Handle functional updates.
+      // Handle functional updates
       const newValue = value instanceof Function ? value(prev) : value;
-      // Apply hydration function if provided.
-      return hydrate ? hydrate(newValue) : newValue;
+      return newValue;
     });
   };
 
