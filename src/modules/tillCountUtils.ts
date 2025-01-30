@@ -6,7 +6,7 @@ export interface CountsStateWithId extends CountsStateType {
   id: string;
 }
 
-const STORAGE_KEY = "tillCount";
+export const STORAGE_KEY = "tillCount";
 
 export interface StoredTillCountNew {
   state?: CountsStateWithId[];

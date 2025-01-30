@@ -7,6 +7,7 @@ import {
   createTillCount,
   hydrateTillCountFromStorage,
   type StoredTillCountNew,
+  STORAGE_KEY,
 } from "../modules/tillCountUtils";
 import { ICurrencyMetadata, IDenomination } from "../data/Money.types";
 
@@ -54,7 +55,7 @@ export function useTillCount(
   const [tillCount, setTillCount] = usePersistedState<
     StoredTillCountNew,
     DenominationCounter[]
-  >("tillCount", storedState, hydrationFunction, dehydrationFunction);
+  >(STORAGE_KEY, storedState, hydrationFunction, dehydrationFunction);
 
   // Initial runtime state for history
   const initialRuntimeState = useMemo(
