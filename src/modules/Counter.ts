@@ -1,32 +1,29 @@
-import { countStrategyInterface, PerUnitStrategy } from "./CountStrategies";
+import { ICountStrategy, PerUnitStrategy } from "./CountStrategies";
 
-export interface CounterConstructorParams {
+export interface CounterParams {
   initialCount?: number;
-  countStrategy?: countStrategyInterface;
-  allowNegativeCount?: boolean;
+  countStrategy?: ICountStrategy;
 }
 
 export class Counter {
   private _count;
   private countStrategy;
-  readonly allowNegativeCount;
 
   constructor({
     initialCount = 0,
     countStrategy = new PerUnitStrategy(),
-    allowNegativeCount = false,
-  }: CounterConstructorParams = {}) {
+  }: CounterParams = {}) {
     this._count = initialCount;
     this.countStrategy = countStrategy;
-    this.allowNegativeCount = allowNegativeCount;
   }
 
+  // The following method seems unused in the whole project
   get countingUnit() {
     return this.countStrategy.countingUnit;
   }
 
   set count(n: number) {
-    this._count = !this.allowNegativeCount && n < 0 ? 0 : n;
+    this._count = n < 0 ? 0 : n;
   }
 
   get count(): number {

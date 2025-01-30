@@ -1,67 +1,66 @@
-import { centToEuro } from "./utils";
-import {
-  createUnitCounter,
-  createRollCounter,
-  createPerGramCounter,
-} from "./CounterFactory";
-
+import type { ICurrencyMetadata, IDenomination } from "../data/Money.types";
 import type {
-  DenominationCountInterface,
+  IDenominationCounter,
   counterSetType,
-  InitialCountsType,
-  ConstructorParams,
+  CountsStateType,
 } from "./DenominationCounter.types";
+import { createCounter } from "./CounterFactory";
+import { convertFromSubunit } from "./utils";
 
-import type { IDenomination } from "../data/Money.types";
-import { EUR } from "../data/Euro";
-
-export class DenominationCount implements DenominationCountInterface {
-  static createEmpty(denomination: IDenomination): DenominationCount {
-    return new DenominationCount({
-      denomination,
-      countersInit: {
-        unit: 0,
-        ...(denomination.rollCapacity && { roll: 0 }),
-        ...(denomination.unitWeight && { weight: 0 }),
-      },
-    });
-  }
-
+export class DenominationCounter implements IDenominationCounter {
   public readonly denomination: IDenomination;
   public readonly counterSet: counterSetType;
+  public readonly currencyMetaData: ICurrencyMetadata;
 
-  constructor({ denomination, countersInit }: ConstructorParams) {
+  constructor({
+    denomination,
+    currencyMetaData,
+    countersState,
+  }: {
+    denomination: IDenomination;
+    countersState?: CountsStateType;
+    currencyMetaData: ICurrencyMetadata;
+  }) {
     this.denomination = denomination;
-    this.counterSet = this.initCounters(countersInit);
+    this.currencyMetaData = currencyMetaData;
+    this.counterSet = this.initCounters(countersState);
   }
 
-  initCounters(initialCounts: InitialCountsType = {}): counterSetType {
+  initCounters(countersState: CountsStateType = {}): counterSetType {
     const counterSet: counterSetType = {
-      unit: createUnitCounter({ initialCount: initialCounts?.unit ?? 0 }),
+      unit: createCounter({
+        countingUnit: "unit",
+        initialCount: countersState?.unit ?? 0,
+      }),
     };
 
     if (this.denomination.unitWeight) {
-      counterSet.weight = createPerGramCounter({
-        unitWeight: this.denomination.unitWeight,
-        initialCount: initialCounts?.weight ?? 0,
+      counterSet.weight = createCounter({
+        countingUnit: "gram",
+        capacityOrUnitWeight: this.denomination.unitWeight,
+        initialCount: countersState?.weight ?? 0,
       });
     }
 
     if (this.denomination.rollCapacity) {
-      counterSet.roll = createRollCounter({
-        capacity: this.denomination.rollCapacity,
-        initialCount: initialCounts?.roll ?? 0,
+      counterSet.roll = createCounter({
+        countingUnit: "roll",
+        capacityOrUnitWeight: this.denomination.rollCapacity,
+        initialCount: countersState?.roll ?? 0,
       });
     }
 
     return counterSet;
   }
 
-  get label(): string {
-    // TODO: Make this generic for all currencies
-    // For now, keeping Euro-specific logic until currency formatting is properly abstracted
-    const value = centToEuro(this.denomination.value);
-    return `${value >= 1 ? value : value.toFixed(2)}${EUR.symbol}`;
+  get formattedValue(): string {
+    const value = convertFromSubunit(
+      this.totalUnits * this.denomination.value,
+      this.currencyMetaData
+    );
+    return `${value >= 1 ? value : value.toFixed(2)}${
+      this.currencyMetaData.symbol
+    }`;
   }
 
   get totalUnits(): number {
@@ -71,16 +70,19 @@ export class DenominationCount implements DenominationCountInterface {
   }
 
   get totalValue(): number {
-    return centToEuro(this.totalUnits * this.denomination.value);
+    return convertFromSubunit(
+      this.totalUnits * this.denomination.value,
+      this.currencyMetaData
+    );
   }
 
   updateCounter(
-    counterKey: keyof DenominationCountInterface["counterSet"],
+    counterKey: keyof IDenominationCounter["counterSet"],
     newValue: number
-  ): DenominationCount {
-    return new DenominationCount({
+  ): DenominationCounter {
+    return new DenominationCounter({
       denomination: this.denomination,
-      countersInit: {
+      countersState: {
         unit: counterKey === "unit" ? newValue : this.counterSet.unit.count,
         ...(this.counterSet.roll && {
           roll: counterKey === "roll" ? newValue : this.counterSet.roll.count,
@@ -90,6 +92,7 @@ export class DenominationCount implements DenominationCountInterface {
             counterKey === "weight" ? newValue : this.counterSet.weight.count,
         }),
       },
+      currencyMetaData: this.currencyMetaData,
     });
   }
 }

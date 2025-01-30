@@ -1,16 +1,17 @@
-import type { IDenomination } from "../data/Money.types";
+import type { IDenomination, ICurrencyMetadata } from "../data/Money.types";
 import { Counter } from "./Counter";
 
-export interface DenominationCountInterface {
+export interface IDenominationCounter {
   denomination: IDenomination;
+  currencyMetaData: ICurrencyMetadata;
   counterSet: counterSetType;
-  label: string;
+  formattedValue: string;
   totalUnits: number;
   totalValue: number;
   updateCounter(
-    counterKey: keyof DenominationCountInterface["counterSet"],
+    counterKey: keyof IDenominationCounter["counterSet"],
     newValue: number
-  ): DenominationCountInterface;
+  ): IDenominationCounter;
 }
 
 export type counterSetType = {
@@ -19,13 +20,8 @@ export type counterSetType = {
   roll?: Counter;
 };
 
-export type InitialCountsType = {
+export type CountsStateType = {
   unit?: number;
   weight?: number;
   roll?: number;
-};
-
-export type ConstructorParams = {
-  denomination: IDenomination;
-  countersInit?: InitialCountsType;
 };
