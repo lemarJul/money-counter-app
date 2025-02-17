@@ -55,7 +55,7 @@ export class DenominationCounter implements IDenominationCounter {
 
   get formattedValue(): string {
     const value = convertFromSubunit(
-      this.totalUnits * this.denomination.value,
+      this.denomination.value,
       this.currencyMetaData
     );
     return `${value >= 1 ? value : value.toFixed(2)}${
