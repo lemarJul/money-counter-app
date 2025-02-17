@@ -57,18 +57,17 @@ export const TotalDisplay = ({
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            background: (theme) =>
-              `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
+            backgroundColor: "primary.dark",
             color: "white",
             borderRadius: 2,
-            boxShadow: (theme) =>
-              `0 8px 32px ${alpha(theme.palette.primary.main, 0.4)}`,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              transform: { xs: "none", sm: "scale(1.02)" },
-              boxShadow: (theme) =>
-                `0 12px 48px ${alpha(theme.palette.primary.main, 0.5)}`,
-            },
+            // boxShadow: (theme) =>
+            //   `0 8px 32px ${alpha(theme.palette.primary.main, 0.4)}`,
+            // transition: "all 0.3s ease",
+            // "&:hover": {
+            //   transform: { xs: "none", sm: "scale(1.02)" },
+            //   boxShadow: (theme) =>
+            //     `0 12px 48px ${alpha(theme.palette.primary.main, 0.5)}`,
+            // },
           }}
         >
           <Typography
@@ -104,7 +103,7 @@ export const TotalDisplay = ({
                   height: { xs: 40, sm: 48 },
                   transition: "all 0.2s",
                   "& .MuiSvgIcon-root": {
-                    fontSize: { xs: "1.25rem", sm: "1.5rem" }
+                    fontSize: { xs: "1.25rem", sm: "1.5rem" },
                   },
                   "&:not(:disabled):hover": {
                     bgcolor: (theme) => theme.palette.primary.main,
@@ -127,7 +126,7 @@ export const TotalDisplay = ({
                   height: { xs: 40, sm: 48 },
                   transition: "all 0.2s",
                   "& .MuiSvgIcon-root": {
-                    fontSize: { xs: "1.25rem", sm: "1.5rem" }
+                    fontSize: { xs: "1.25rem", sm: "1.5rem" },
                   },
                   "&:not(:disabled):hover": {
                     bgcolor: (theme) => theme.palette.primary.main,
@@ -148,7 +147,7 @@ export const TotalDisplay = ({
                 height: { xs: 40, sm: 48 },
                 transition: "all 0.2s",
                 "& .MuiSvgIcon-root": {
-                  fontSize: { xs: "1.25rem", sm: "1.5rem" }
+                  fontSize: { xs: "1.25rem", sm: "1.5rem" },
                 },
                 "&:hover": {
                   bgcolor: (theme) => theme.palette.error.main,
