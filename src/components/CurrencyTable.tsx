@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Stack } from "@mui/material";
 
 import { DenominationRow } from "./row/DenominationRow"; // Assuming this component is defined elsewhere
 import { ICurrencyMetadata } from "../data/Money.types";
@@ -20,12 +20,12 @@ export const CurrencyTable: React.FC<CurrencyTableProps> = ({
   currencyMetaData,
 }) => {
   return (
-    <Box
+    <Stack
+      spacing={1}
       sx={{
-        flex: 1,
-        overflow: "auto",
+        overflow: "scroll",
         bgcolor: "background.default",
-        py: { xs: 0.5, sm: 1 },
+        p: { xs: 1, sm: 2 },
       }}
     >
       {tillCount.map((denomination, index) => {
@@ -42,7 +42,7 @@ export const CurrencyTable: React.FC<CurrencyTableProps> = ({
           />
         );
       })}
-    </Box>
+    </Stack>
   );
 };
 

@@ -1,18 +1,11 @@
-import {
-  AppBar as MuiAppBar,
-  Container,
-  IconButton,
-  Paper,
-  Toolbar,
-} from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Container, Paper } from "@mui/material";
 import { AppBar } from "./AppBar";
-
 import { useTillCount } from "../hooks/useTillCount";
-import { TotalDisplay } from "./TotalDisplay";
 import { EUR, EUR_DENOMINATIONS } from "../data/Euro";
 import { CurrencyHeader } from "./CurrencyHeader";
 import { CurrencyTable } from "./CurrencyTable";
+import { Total } from "./Total";
+import { Actions } from "./Actions";
 
 const Config = {
   currencyMetaData: EUR,
@@ -50,7 +43,12 @@ function App() {
           borderRadius: 2,
         }}
       >
-        {/* <AppBar></AppBar> */}
+        <AppBar></AppBar>
+        {/* <EuroTable data={tillCount}></EuroTable> */}
+        <Total
+          total={tillCountTotalValue}
+          currencyMetaData={Config.currencyMetaData}
+        />
         <CurrencyHeader
           currencyMetaData={Config.currencyMetaData}
         ></CurrencyHeader>
@@ -59,9 +57,7 @@ function App() {
           tillCount={tillCount}
           updateTillCount={updateTillCount}
         ></CurrencyTable>
-        <TotalDisplay
-          total={tillCountTotalValue}
-          currencyMetaData={Config.currencyMetaData}
+        <Actions
           onReset={resetTillCount}
           onUndo={undo}
           onRedo={redo}
