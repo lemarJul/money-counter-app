@@ -1,12 +1,11 @@
-import { Box, IconButton, Paper, Typography, Stack } from "@mui/material";
-import {
-  Undo as UndoIcon,
-  Redo as RedoIcon,
-  Delete as DeleteIcon,
-} from "@mui/icons-material";
+import { Paper, Stack } from "@mui/material";
+import type { ICurrencyMetadata } from "../data/Money.types";
+import { Total } from "./Total";
+import { Actions } from "./Actions";
 
 interface TotalDisplayProps {
   total: number;
+  currencyMetaData: ICurrencyMetadata;
   onReset: () => void;
   onUndo: () => void;
   onRedo: () => void;
@@ -21,50 +20,33 @@ export const TotalDisplay = ({
   onRedo,
   canUndo,
   canRedo,
+  currencyMetaData,
 }: TotalDisplayProps) => {
   return (
-    <Box
+    <Paper
+      elevation={3}
       sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: 2,
-        width: "100%",
-        p: 2,
+        p: { xs: 1, sm: 2 },
+        bgcolor: (theme) =>
+          theme.palette.mode === "dark"
+            ? "background.paper"
+            : "background.default",
       }}
     >
-      <Paper
-        elevation={1}
-        sx={{
-          flex: 1,
-          p: 2,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={{ xs: 2, sm: 3 }}
+        sx={{ width: "100%" }}
       >
-        <Typography variant="h4">{total.toFixed(2)} €</Typography>
-      </Paper>
-      <Stack direction="row" spacing={1}>
-        <IconButton
-          onClick={onUndo}
-          disabled={!canUndo}
-          title="Undo"
-          size="large"
-        >
-          <UndoIcon />
-        </IconButton>
-        <IconButton
-          onClick={onRedo}
-          disabled={!canRedo}
-          title="Redo"
-          size="large"
-        >
-          <RedoIcon />
-        </IconButton>
-        <IconButton onClick={onReset} title="Reset" size="large" color="error">
-          <DeleteIcon />
-        </IconButton>
+        <Total total={total} currencyMetaData={currencyMetaData} />
+        <Actions
+          onReset={onReset}
+          onUndo={onUndo}
+          onRedo={onRedo}
+          canUndo={canUndo}
+          canRedo={canRedo}
+        />
       </Stack>
-    </Box>
+    </Paper>
   );
 };

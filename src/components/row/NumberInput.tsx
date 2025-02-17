@@ -1,5 +1,6 @@
-import { TextField } from "@mui/material";
+import { InputAdornment, TextField, alpha } from "@mui/material";
 import { ChangeEvent, FocusEvent } from "react";
+import { Tag as TagIcon } from "@mui/icons-material";
 
 interface NumberInputProps {
   value: number;
@@ -32,12 +33,48 @@ export const NumberInput = ({ value = 0, onChange }: NumberInputProps) => {
         step: 1,
         style: {
           textAlign: "center",
-          opacity: value ? 1 : 0.3,
         },
+      }}
+      InputProps={{
+        startAdornment:
+          value > 0 ? (
+            <InputAdornment position="start">
+              <TagIcon
+                color="primary"
+                sx={{
+                  fontSize: { xs: "1rem", sm: "1.25rem" },
+                  marginRight: { xs: -0.5, sm: 0 },
+                }}
+              />
+            </InputAdornment>
+          ) : null,
       }}
       variant="outlined"
       size="small"
       fullWidth
+      sx={{
+        "& .MuiInputBase-root": {
+          minHeight: { xs: 36, sm: 40 },
+          fontSize: { xs: "0.875rem", sm: "1rem" },
+          padding: { xs: "0 4px", sm: "0 8px" },
+          transition: "all 0.2s",
+          backgroundColor: (theme) =>
+            value === 0
+              ? alpha(theme.palette.action.disabled, 0.1)
+              : alpha(theme.palette.background.paper, 0.8),
+          "&:hover": {
+            backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
+          },
+          "&.Mui-focused": {
+            backgroundColor: "transparent",
+          },
+        },
+        "& input": {
+          padding: { xs: "6px 2px", sm: "8px 4px" },
+          color: (theme) =>
+            value === 0 ? theme.palette.text.disabled : "inherit",
+        },
+      }}
     />
   );
 };

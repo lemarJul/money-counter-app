@@ -1,16 +1,18 @@
-import { Grid, Typography, Box } from "@mui/material";
+import { Grid, Typography, Box, Stack, alpha } from "@mui/material";
 import { NumberInput } from "./NumberInput";
 import {
-  DenominationCountInterface,
+  IDenominationCounter,
   counterSetType,
 } from "../../modules/DenominationCounter.types";
+import type { ICurrencyMetadata } from "../../data/Money.types";
 
 interface DenominationRowProps {
   label: string;
   totalUnits: number;
   counterSet: counterSetType;
+  currencyMetaData: ICurrencyMetadata;
   setCount: (
-    counterKey: keyof DenominationCountInterface["counterSet"],
+    counterKey: keyof IDenominationCounter["counterSet"],
     newValue: number
   ) => void;
 }
@@ -22,46 +24,95 @@ export const DenominationRow = ({
   setCount,
 }: DenominationRowProps) => {
   return (
-    <Grid
-      container
-      spacing={2}
+    <Stack
+      spacing={1}
+      direction="row"
       alignItems="center"
+      justifyContent="space-between"
       sx={{
-        p: 1,
-        borderBottom: 1,
-        borderColor: "divider",
+        "&:hover": {
+          backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.15),
+        },
+        "& > *": {
+          flex: 1,
+        },
       }}
     >
-      <Grid item xs={3}>
-        <Box>
-          <Typography variant="body1">{label}</Typography>
-          <Typography variant="caption" color="text.secondary">
-            x {totalUnits}
-          </Typography>
-        </Box>
-      </Grid>
-      <Grid item xs={3}>
-        <NumberInput
-          value={counterSet.unit.count}
-          onChange={(value) => setCount("unit", value)}
-        />
-      </Grid>
-      <Grid item xs={3}>
-        {counterSet.roll && (
-          <NumberInput
-            value={counterSet.roll.count}
-            onChange={(value) => setCount("roll", value)}
-          />
-        )}
-      </Grid>
-      <Grid item xs={3}>
-        {counterSet.weight && (
-          <NumberInput
-            value={counterSet.weight.count}
-            onChange={(value) => setCount("weight", value)}
-          />
-        )}
-      </Grid>
-    </Grid>
+      {[
+        {
+          xs: 3,
+          content: (
+            <Stack
+              direction="row"
+              spacing={{ xs: 0.5, sm: 1 }}
+              alignItems="center"
+            >
+              <Box>
+                <Typography
+                  variant="body1"
+                  fontWeight="medium"
+                  sx={{
+                    fontSize: { xs: "1rem", sm: "1.125rem" },
+                    lineHeight: 0.75,
+                  }}
+                >
+                  {label}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{
+                    display: "block",
+                    fontSize: { xs: "0.7rem", sm: "0.75rem" },
+                  }}
+                >
+                  x {totalUnits}
+                </Typography>
+              </Box>
+            </Stack>
+          ),
+        },
+        {
+          xs: 3,
+          content: (
+            <NumberInput
+              value={counterSet.unit.count}
+              onChange={(value) => setCount("unit", value)}
+            />
+          ),
+        },
+        {
+          xs: 3,
+          content: counterSet.roll ? (
+            <NumberInput
+              value={counterSet.roll.count}
+              onChange={(value) => setCount("roll", value)}
+            />
+          ) : (
+            <Box />
+          ),
+        },
+        {
+          xs: 3,
+          content: counterSet.weight ? (
+            <NumberInput
+              value={counterSet.weight.count}
+              onChange={(value) => setCount("weight", value)}
+            />
+          ) : (
+            <Box />
+          ),
+        },
+      ]
+        .filter(Boolean)
+        .map((item, index) => {
+          if (!item) return null;
+          return (
+            <Grid item key={index} xs={item.xs}>
+              {item.content}
+            </Grid>
+          );
+        })}
+    </Stack>
   );
 };
