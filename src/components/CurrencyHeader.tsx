@@ -29,7 +29,7 @@ export const CurrencyHeader: React.FC<HeaderProps> = ({ currencyMetaData }) => {
               textAlign: "center",
               borderColor: "divider",
               borderStyle: "solid",
-              borderWidth: 0.1,
+              borderWidth: 1,
               boxSizing: "border-box",
               "&:hover": {
                 bgcolor: (theme) =>

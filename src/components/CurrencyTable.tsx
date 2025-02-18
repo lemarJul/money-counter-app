@@ -21,11 +21,10 @@ export const CurrencyTable: React.FC<CurrencyTableProps> = ({
 }) => {
   return (
     <Stack
-      spacing={1}
+      // spacing={1}
       sx={{
         overflow: "scroll",
         bgcolor: "background.default",
-        p: { xs: 1, sm: 2 },
       }}
     >
       {tillCount.map((denomination, index) => {

@@ -30,6 +30,10 @@ export const DenominationRow = ({
       alignItems="center"
       justifyContent="space-between"
       sx={{
+        p: { xs: 1, sm: 2 },
+        py: 1,
+        borderBottom: 1,
+        borderColor: "divider",
         "&:hover": {
           backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.15),
         },
@@ -42,17 +46,13 @@ export const DenominationRow = ({
         {
           xs: 3,
           content: (
-            <Stack
-              direction="row"
-              spacing={{ xs: 0.5, sm: 1 }}
-              alignItems="center"
-            >
+            <Stack direction="row" alignItems="center">
               <Box>
                 <Typography
                   variant="body1"
                   fontWeight="medium"
                   sx={{
-                    fontSize: { xs: "1rem", sm: "1.125rem" },
+                    fontSize: "1.125rem",
                     lineHeight: 0.75,
                   }}
                 >
@@ -63,7 +63,6 @@ export const DenominationRow = ({
                   color="text.secondary"
                   sx={{
                     display: "block",
-                    fontSize: { xs: "0.7rem", sm: "0.75rem" },
                   }}
                 >
                   x {totalUnits}
