@@ -43,12 +43,9 @@ function App() {
           borderRadius: 2,
         }}
       >
-        <AppBar></AppBar>
+        {/* <AppBar></AppBar> */}
         {/* <EuroTable data={tillCount}></EuroTable> */}
-        <Total
-          total={tillCountTotalValue}
-          currencyMetaData={Config.currencyMetaData}
-        />
+
         <CurrencyHeader
           currencyMetaData={Config.currencyMetaData}
         ></CurrencyHeader>
@@ -57,6 +54,10 @@ function App() {
           tillCount={tillCount}
           updateTillCount={updateTillCount}
         ></CurrencyTable>
+        <Total
+          total={tillCountTotalValue}
+          currencyMetaData={Config.currencyMetaData}
+        />
         <Actions
           onReset={resetTillCount}
           onUndo={undo}

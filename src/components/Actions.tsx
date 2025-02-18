@@ -45,7 +45,7 @@ export const Actions = ({
         justifyContent: "space-between",
         alignItems: "center",
         width: "100%",
-        bgcolor: (theme) => theme.palette.background.paper,
+        // bgcolor: (theme) => theme.palette.background.paper,
       }}
     >
       <Stack
@@ -66,10 +66,10 @@ export const Actions = ({
           aria-label="undo"
           sx={{
             ...buttonStyle,
-            bgcolor: (theme) => theme.palette.primary.main,
+            bgcolor: (theme) => theme.palette.primary.dark,
             color: "white",
             "&:not(:disabled):hover": {
-              bgcolor: (theme) => theme.palette.primary.dark,
+              bgcolor: (theme) => theme.palette.primary.main,
             },
           }}
         >
@@ -82,10 +82,10 @@ export const Actions = ({
           aria-label="redo"
           sx={{
             ...buttonStyle,
-            bgcolor: (theme) => theme.palette.primary.main,
+            bgcolor: (theme) => theme.palette.primary.dark,
             color: "white",
             "&:not(:disabled):hover": {
-              bgcolor: (theme) => theme.palette.primary.dark,
+              bgcolor: (theme) => theme.palette.primary.main,
             },
           }}
         >
@@ -98,6 +98,8 @@ export const Actions = ({
           aria-label="reset"
           sx={{
             ...buttonStyle,
+            bgcolor: (theme) => theme.palette.primary.dark,
+            color: "white",
             "&:hover": {
               bgcolor: (theme) => theme.palette.error.dark,
               color: "white",
