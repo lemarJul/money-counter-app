@@ -1,11 +1,11 @@
 import { Container, Paper } from "@mui/material";
-import { AppBar } from "./AppBar";
 import { useTillCount } from "../hooks/useTillCount";
 import { EUR, EUR_DENOMINATIONS } from "../data/Euro";
 import { CurrencyHeader } from "./CurrencyHeader";
 import { CurrencyTable } from "./CurrencyTable";
 import { Total } from "./Total";
 import { Actions } from "./Actions";
+import { InstallPWA } from "./InstallPWA";
 
 const Config = {
   currencyMetaData: EUR,
@@ -33,6 +33,7 @@ function App() {
         px: { xs: 1, sm: 2 },
       }}
     >
+      <InstallPWA />
       <Paper
         elevation={3}
         sx={{
@@ -43,9 +44,6 @@ function App() {
           borderRadius: 2,
         }}
       >
-        {/* <AppBar></AppBar> */}
-        {/* <EuroTable data={tillCount}></EuroTable> */}
-
         <CurrencyHeader
           currencyMetaData={Config.currencyMetaData}
         ></CurrencyHeader>
