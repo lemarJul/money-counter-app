@@ -9,13 +9,13 @@ declare module "@mui/material/TextField" {
 export const createAppTheme = (prefersDarkMode: boolean): Theme => {
   const deepBlue = "#1E2A38";
   const electricBlue = "#3A7DFF";
-  const vibrantGreen = "#3CB878";
-  const warmOrange = "#F5A623";
-  const goldenBrown = "#A67C52";
+  // const vibrantGreen = "#3CB878";
+  // const warmOrange = "#F5A623";
+  // const goldenBrown = "#A67C52";
   const darkCharcoal = "#12181B";
   const coolGray = "#B0BEC5";
   const softWhite = "#F9FAFB";
-  const warningRed = "#E63946";
+  // const warningRed = "#E63946";
   // const softYellow = "#FFD700";
 
   return createTheme({
@@ -27,34 +27,16 @@ export const createAppTheme = (prefersDarkMode: boolean): Theme => {
         dark: deepBlue, //Example darker shade
         contrastText: prefersDarkMode ? softWhite : darkCharcoal,
       },
-      secondary: {
-        main: vibrantGreen,
-        light: "#62D19A", //Example lighter shade
-        dark: "#27865C", //Example darker shade
-        contrastText: prefersDarkMode ? softWhite : darkCharcoal,
-      },
-      error: {
-        main: warningRed,
-        light: "#E67986", //Example lighter shade
-        dark: "#B82C3B", //Example darker shade
-        contrastText: softWhite,
-      },
-      warning: {
-        main: warmOrange,
-        light: "#FFC66D", //Example lighter shade
-        dark: "#D98B00", //Example darker shade
-        contrastText: darkCharcoal,
-      },
+      // secondary: {
+      //   main: vibrantGreen,
+      //   light: "#62D19A", //Example lighter shade
+      //   dark: "#27865C", //Example darker shade
+      //   contrastText: prefersDarkMode ? softWhite : darkCharcoal,
+      // },
       info: {
-        main: goldenBrown,
-        light: "#D9B48B", //Example lighter shade
-        dark: "#80613D", //Example darker shade
-        contrastText: prefersDarkMode ? softWhite : darkCharcoal,
-      },
-      success: {
-        main: vibrantGreen,
-        light: "#62D19A", //Example lighter shade
-        dark: "#27865C", //Example darker shade
+        main: electricBlue,
+        light: "#66B2FF", //Example lighter shade
+        dark: deepBlue, //Example darker shade
         contrastText: prefersDarkMode ? softWhite : darkCharcoal,
       },
       background: {
