@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["cash-register-solid.svg", "vite.svg"],
+      includeAssets: ["cash-register-solid.svg", "vite.svg", "logo-192.png", "logo-512.png", "logo-192-maskable.png", "logo-512-maskable.png"],
       manifest: {
         name: "Money Counter App",
         short_name: "Money Counter",
